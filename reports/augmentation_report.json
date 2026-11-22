@@ -1,0 +1,37 @@
+{
+  "vocab_size": 6641,
+  "augmented_rows": 3760,
+  "augmented_by_type_label": {
+    "abbreviation": {
+      "SAFE": 295,
+      "SCAM": 295
+    },
+    "char_substitution": {
+      "SAFE": 379,
+      "SCAM": 379
+    },
+    "hinglish": {
+      "SAFE": 647,
+      "SCAM": 647
+    },
+    "mixed_case": {
+      "SAFE": 282,
+      "SCAM": 282
+    },
+    "spacing": {
+      "SAFE": 277,
+      "SCAM": 277
+    }
+  },
+  "adversarial_rows": 11000,
+  "adversarial_base_messages": 1000,
+  "adversarial_changed_share": 0.8731,
+  "held_out_mutation_types": [
+    "punctuation_split",
+    "unicode_confusables",
+    "invisible_chars",
+    "repeated_chars",
+    "url_variation",
+    "combined"
+  ]
+}

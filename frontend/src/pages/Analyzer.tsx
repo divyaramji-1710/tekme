@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Dna, Eraser, Info, Link2, ListChecks, ScanSearch, ShieldAlert, ShieldCheck, Sparkles, TriangleAlert } from "lucide-react";
 import { api, ApiError, CATEGORY_LABELS, LANGUAGE_LABELS, MAX_CHARS, type Example, type Prediction } from "../services/api";
-import { Badge, Button, Card, Empty, ErrorBox, Spinner, pct } from "../components/ui";
+import { Badge, Button, Card, Empty, ErrorBox, Spinner, confPct } from "../components/ui";
 import { ConfidenceBar } from "../components/charts";
 import { HighlightedText, HighlightLegend } from "../components/HighlightedText";
 
@@ -107,7 +107,7 @@ function Result({ result: r, text, onSendToLab }: { result: Prediction; text: st
             </div>
             <div>
               <div className="text-xs text-ink-3">Confidence</div>
-              <div className="font-semibold tabular-nums text-ink">{pct(r.confidence)}</div>
+              <div className="font-semibold tabular-nums text-ink">{confPct(r.confidence)}</div>
             </div>
           </div>
         </div>
@@ -120,7 +120,7 @@ function Result({ result: r, text, onSendToLab }: { result: Prediction; text: st
           <p className="text-[15px] leading-7 text-ink">{r.explanation}</p>
           <div className="flex flex-wrap gap-2">
             <Badge tone="info">{LANGUAGE_LABELS[r.language] ?? r.language}</Badge>
-            <Badge>scam probability {pct(r.scam_probability)}</Badge>
+            <Badge>scam probability {confPct(r.scam_probability)}</Badge>
             <Badge>{r.latency_ms.toFixed(0)} ms on this device</Badge>
             {Object.values(r.obfuscation).some((v) => v > 0) && <Badge tone="warn">obfuscation detected</Badge>}
           </div>

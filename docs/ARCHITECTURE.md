@@ -24,7 +24,7 @@
  │ 3. Statistical models                                                          │
  │    semantic.py         word+char TF-IDF → LogisticRegression (all messages)     │
  │    specialist          same, trained only on transactional-looking messages     │
- │ 4. fusion.py           StandardScaler + LogisticRegression over 56 features     │
+ │ 4. fusion.py           StandardScaler + LogisticRegression over 47 features     │
  │                        → calibrator (isotonic/sigmoid, fit on validation)       │
  │                        → verdict = SCAM if P ≥ 0.5; confidence = P(verdict)     │
  │ 5. categorizer.py      multinomial LR (text + tactic tokens), OTHER fallback    │

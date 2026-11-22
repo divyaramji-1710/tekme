@@ -79,3 +79,5 @@ export function Stat({ label, value, hint, tone }: { label: string; value: strin
 }
 
 export const pct = (v: number | null | undefined, d = 1) => (v === null || v === undefined || Number.isNaN(v) ? "—" : `${(v * 100).toFixed(d)}%`);
+/** Confidence display: never round a calibrated probability up to a claim of certainty. */
+export const confPct = (v: number) => (v >= 0.995 ? ">99.5%" : v <= 0.005 ? "<0.5%" : pct(v));

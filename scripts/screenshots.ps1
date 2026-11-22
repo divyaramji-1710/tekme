@@ -19,8 +19,10 @@ $shots = [ordered]@{
 $profileDir = Join-Path $env:TEMP "scamprint-edge-profile"
 foreach ($k in $shots.Keys) {
   $out = Join-Path (Resolve-Path docs\screenshots) "$k.png"
-  & $edge --headless=new --disable-gpu --no-first-run --user-data-dir="$profileDir" --hide-scrollbars `
-    --window-size=1440,2200 --virtual-time-budget=8000 --screenshot="$out" ($base + $shots[$k]) 2>$null | Out-Null
+  $args = @("--headless=new", "--disable-gpu", "--no-first-run", "--user-data-dir=`"$profileDir`"", "--hide-scrollbars",
+            "--window-size=1440,2200", "--virtual-time-budget=8000", "--screenshot=`"$out`"", "`"$($base + $shots[$k])`"")
+  $p = Start-Process -FilePath $edge -ArgumentList $args -PassThru -WindowStyle Hidden -RedirectStandardError (Join-Path $env:TEMP "scamprint-edge.log")
+  if (-not $p.WaitForExit(45000)) { Stop-Process -Id $p.Id -Force; Write-Warning "timed out: $k" }
   Start-Sleep -Milliseconds 500
   Write-Host "saved $out"
 }

@@ -8,4 +8,4 @@ ml/datasets/raw/
 ml/datasets/processed/
 *.log
 .env
-.claude/settings.local.json
+reports/*_log.txt

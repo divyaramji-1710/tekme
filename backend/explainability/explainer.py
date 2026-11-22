@@ -60,11 +60,11 @@ def confidence_interpretation(conf: float, verdict: str) -> dict:
         level = "moderate"
     else:
         level = "low"
-    pct = round(conf * 100)
+    share = "over 99%" if conf >= 0.995 else f"roughly {round(conf * 100)}%"
     return {
         "level": level,
         "text": (f"{level.capitalize()} confidence. The score is calibrated on held-out validation data: "
-                 f"messages that received a similar score were {verdict} roughly {pct}% of the time."),
+                 f"messages that received a similar score were {verdict} {share} of the time."),
     }
 
 
@@ -78,7 +78,10 @@ def explain(result: dict, out, contributions: list[tuple[str, float]], words: di
     sentences: list[str] = []
     if verdict == "SCAM":
         tparts = [TACTIC_PHRASES[h.id] for h in hits[:3]]
-        sparts = [SIGNAL_PHRASES[s] for s in dict.fromkeys(sig_ids) if s in SIGNAL_PHRASES][:2]
+        sids = list(dict.fromkeys(sig_ids))
+        if "lookalike_domain" in sids and "brand_domain_mismatch" in sids:
+            sids.remove("brand_domain_mismatch")  # same finding, stated once
+        sparts = [SIGNAL_PHRASES[s] for s in sids if s in SIGNAL_PHRASES][:2]
         if rep.conflict:
             sentences.append("Although it is formatted like a routine notification, it "
                              + _join(rep.conflict_reasons) + " - a common scam pattern.")

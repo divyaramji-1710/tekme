@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ArrowRight, Dna, FlaskConical, Info, ShieldAlert, ShieldCheck } from "lucide-react";
 import { api, ApiError, MAX_CHARS, type MutationEval, type MutationType, type Verdict } from "../services/api";
-import { Badge, Button, Card, Empty, ErrorBox, Spinner, Stat, pct } from "../components/ui";
+import { Badge, Button, Card, Empty, ErrorBox, Spinner, Stat, confPct, pct } from "../components/ui";
 
 const DEFAULT_TEXT = "Update your KYC immediately or your account will be blocked today. Click http://kyc-verify.example/login";
 
@@ -80,10 +80,10 @@ export default function MutationLab({ seedText }: { seedText: string | null }) {
       {res && (
         <div className="space-y-6 fade-in">
           <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-            <Stat label="Original verdict" value={`${res.original.verdict}`} tone={res.original.verdict === "SCAM" ? "scam" : "safe"} hint={`confidence ${pct(res.original.confidence)}`} />
+            <Stat label="Original verdict" value={`${res.original.verdict}`} tone={res.original.verdict === "SCAM" ? "scam" : "safe"} hint={`confidence ${confPct(res.original.confidence)}`} />
             <Stat label="Prediction consistency" value={pct(res.summary.consistency)} hint={`${res.summary.verdict_flips} verdict flip(s) of ${res.summary.n_variants}`} />
             <Stat label={res.summary.accuracy_vs_expected !== null ? "Accuracy vs ground truth" : "Accuracy"} value={res.summary.accuracy_vs_expected !== null ? pct(res.summary.accuracy_vs_expected) : "n/a"} hint={res.summary.accuracy_vs_expected !== null ? `expected ${expected}` : "set a ground truth to measure"} />
-            <Stat label="Scam-probability range" value={`${pct(res.summary.min_scam_probability, 0)}–${pct(res.summary.max_scam_probability, 0)}`} hint="across variants" />
+            <Stat label="Scam-probability range" value={`${confPct(res.summary.min_scam_probability)} – ${confPct(res.summary.max_scam_probability)}`} hint="across variants" />
           </div>
           <p className="flex items-start gap-2 text-xs text-ink-3"><Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />{res.summary.metric_note}</p>
           <Card title={`Variants (${res.variants.length})`}>
@@ -97,7 +97,7 @@ export default function MutationLab({ seedText }: { seedText: string | null }) {
                       <td className="py-2.5 pr-3 text-ink-2">{v.type.replace(/_/g, " ")}</td>
                       <td className="max-w-md py-2.5 pr-3 font-mono text-xs leading-5 text-ink break-words">{v.text}{!v.changed && <span className="ml-1 text-ink-3">(no change)</span>}</td>
                       <td className="py-2.5 pr-3">{v.verdict === "SCAM" ? <Badge tone="scam"><ShieldAlert className="h-3 w-3" />SCAM</Badge> : <Badge tone="safe"><ShieldCheck className="h-3 w-3" />SAFE</Badge>}</td>
-                      <td className="py-2.5 pr-3 text-right tabular-nums text-ink-2">{pct(v.confidence)}</td>
+                      <td className="py-2.5 pr-3 text-right tabular-nums text-ink-2">{confPct(v.confidence)}</td>
                       <td className="py-2.5">{v.verdict_changed ? <Badge tone="warn"><ArrowRight className="h-3 w-3" />flipped</Badge> : <span className="text-xs text-ink-3">stable</span>}</td>
                     </tr>
                   ))}
