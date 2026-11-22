@@ -1,0 +1,416 @@
+{
+  "_meta": {
+    "description": "Primary public web domains of organisations frequently impersonated in Indian SMS scams. Used OFFLINE for look-alike and claimed-brand/domain mismatch checks.",
+    "source": "Manually compiled by the SCAMPRINT developer from the organisations' commonly known public websites (Nov 2026). Includes the RBI-mandated '.bank.in' domains. Not exhaustive and not verified against a registry.",
+    "limitations": "A domain missing from this list is NOT evidence of fraud and a listed domain is NOT a guarantee of safety (compromised sites, open redirects). Brand matching is keyword based.",
+    "update_process": "Edit this file by hand and restart the backend. The application never downloads domain lists."
+  },
+  "brands": {
+    "sbi": {
+      "keywords": [
+        "sbi",
+        "state bank"
+      ],
+      "domains": [
+        "sbi.co.in",
+        "onlinesbi.sbi",
+        "sbi.bank.in",
+        "sbicard.com",
+        "yonosbi.com"
+      ]
+    },
+    "hdfc": {
+      "keywords": [
+        "hdfc"
+      ],
+      "domains": [
+        "hdfcbank.com",
+        "hdfc.bank.in",
+        "hdfc.com"
+      ]
+    },
+    "icici": {
+      "keywords": [
+        "icici"
+      ],
+      "domains": [
+        "icicibank.com",
+        "icici.bank.in"
+      ]
+    },
+    "axis": {
+      "keywords": [
+        "axis bank",
+        "axis"
+      ],
+      "domains": [
+        "axisbank.com",
+        "axis.bank.in"
+      ]
+    },
+    "kotak": {
+      "keywords": [
+        "kotak"
+      ],
+      "domains": [
+        "kotak.com",
+        "kotak.bank.in"
+      ]
+    },
+    "pnb": {
+      "keywords": [
+        "pnb",
+        "punjab national"
+      ],
+      "domains": [
+        "pnbindia.in",
+        "pnb.bank.in"
+      ]
+    },
+    "bob": {
+      "keywords": [
+        "bank of baroda",
+        "bob"
+      ],
+      "domains": [
+        "bankofbaroda.in",
+        "bankofbaroda.bank.in"
+      ]
+    },
+    "canara": {
+      "keywords": [
+        "canara"
+      ],
+      "domains": [
+        "canarabank.com",
+        "canarabank.bank.in"
+      ]
+    },
+    "rbi": {
+      "keywords": [
+        "rbi",
+        "reserve bank"
+      ],
+      "domains": [
+        "rbi.org.in"
+      ]
+    },
+    "uidai": {
+      "keywords": [
+        "uidai",
+        "aadhaar"
+      ],
+      "domains": [
+        "uidai.gov.in"
+      ]
+    },
+    "incometax": {
+      "keywords": [
+        "income tax",
+        "incometax",
+        "itr"
+      ],
+      "domains": [
+        "incometax.gov.in"
+      ]
+    },
+    "npci": {
+      "keywords": [
+        "npci",
+        "bhim"
+      ],
+      "domains": [
+        "npci.org.in",
+        "bhimupi.org.in"
+      ]
+    },
+    "epfo": {
+      "keywords": [
+        "epfo",
+        "epf",
+        "provident fund"
+      ],
+      "domains": [
+        "epfindia.gov.in"
+      ]
+    },
+    "indiapost": {
+      "keywords": [
+        "india post",
+        "indiapost"
+      ],
+      "domains": [
+        "indiapost.gov.in"
+      ]
+    },
+    "irctc": {
+      "keywords": [
+        "irctc"
+      ],
+      "domains": [
+        "irctc.co.in"
+      ]
+    },
+    "amazon": {
+      "keywords": [
+        "amazon"
+      ],
+      "domains": [
+        "amazon.in",
+        "amazon.com",
+        "amzn.in",
+        "amzn.to"
+      ]
+    },
+    "flipkart": {
+      "keywords": [
+        "flipkart"
+      ],
+      "domains": [
+        "flipkart.com",
+        "fkrt.it"
+      ]
+    },
+    "myntra": {
+      "keywords": [
+        "myntra"
+      ],
+      "domains": [
+        "myntra.com"
+      ]
+    },
+    "paytm": {
+      "keywords": [
+        "paytm"
+      ],
+      "domains": [
+        "paytm.com",
+        "paytm.me"
+      ]
+    },
+    "phonepe": {
+      "keywords": [
+        "phonepe"
+      ],
+      "domains": [
+        "phonepe.com"
+      ]
+    },
+    "google": {
+      "keywords": [
+        "google pay",
+        "gpay",
+        "google"
+      ],
+      "domains": [
+        "google.com",
+        "pay.google.com",
+        "g.co"
+      ]
+    },
+    "swiggy": {
+      "keywords": [
+        "swiggy"
+      ],
+      "domains": [
+        "swiggy.com"
+      ]
+    },
+    "zomato": {
+      "keywords": [
+        "zomato"
+      ],
+      "domains": [
+        "zomato.com"
+      ]
+    },
+    "airtel": {
+      "keywords": [
+        "airtel"
+      ],
+      "domains": [
+        "airtel.in"
+      ]
+    },
+    "jio": {
+      "keywords": [
+        "jio"
+      ],
+      "domains": [
+        "jio.com"
+      ]
+    },
+    "vi": {
+      "keywords": [
+        "vodafone",
+        "vi "
+      ],
+      "domains": [
+        "myvi.in"
+      ]
+    },
+    "bsnl": {
+      "keywords": [
+        "bsnl"
+      ],
+      "domains": [
+        "bsnl.co.in"
+      ]
+    },
+    "netflix": {
+      "keywords": [
+        "netflix"
+      ],
+      "domains": [
+        "netflix.com"
+      ]
+    },
+    "whatsapp": {
+      "keywords": [
+        "whatsapp"
+      ],
+      "domains": [
+        "whatsapp.com"
+      ]
+    },
+    "fedex": {
+      "keywords": [
+        "fedex"
+      ],
+      "domains": [
+        "fedex.com"
+      ]
+    },
+    "dhl": {
+      "keywords": [
+        "dhl"
+      ],
+      "domains": [
+        "dhl.com",
+        "dhl.co.in"
+      ]
+    },
+    "bluedart": {
+      "keywords": [
+        "blue dart",
+        "bluedart"
+      ],
+      "domains": [
+        "bluedart.com"
+      ]
+    },
+    "delhivery": {
+      "keywords": [
+        "delhivery"
+      ],
+      "domains": [
+        "delhivery.com"
+      ]
+    },
+    "lic": {
+      "keywords": [
+        "lic",
+        "life insurance corporation"
+      ],
+      "domains": [
+        "licindia.in"
+      ]
+    },
+    "gst": {
+      "keywords": [
+        "gst"
+      ],
+      "domains": [
+        "gst.gov.in"
+      ]
+    },
+    "parivahan": {
+      "keywords": [
+        "parivahan",
+        "challan",
+        "fastag"
+      ],
+      "domains": [
+        "parivahan.gov.in",
+        "echallan.parivahan.gov.in",
+        "ihmcl.co.in"
+      ]
+    },
+    "paypal": {
+      "keywords": [
+        "paypal"
+      ],
+      "domains": [
+        "paypal.com",
+        "paypal.me"
+      ]
+    },
+    "apple": {
+      "keywords": [
+        "apple",
+        "icloud"
+      ],
+      "domains": [
+        "apple.com",
+        "icloud.com"
+      ]
+    },
+    "microsoft": {
+      "keywords": [
+        "microsoft",
+        "outlook",
+        "office 365"
+      ],
+      "domains": [
+        "microsoft.com",
+        "live.com",
+        "outlook.com",
+        "office.com"
+      ]
+    },
+    "linkedin": {
+      "keywords": [
+        "linkedin"
+      ],
+      "domains": [
+        "linkedin.com",
+        "lnkd.in"
+      ]
+    },
+    "meta": {
+      "keywords": [
+        "facebook",
+        "instagram"
+      ],
+      "domains": [
+        "facebook.com",
+        "instagram.com",
+        "fb.com"
+      ]
+    },
+    "uber": {
+      "keywords": [
+        "uber"
+      ],
+      "domains": [
+        "uber.com"
+      ]
+    },
+    "ola": {
+      "keywords": [
+        "ola"
+      ],
+      "domains": [
+        "olacabs.com"
+      ]
+    },
+    "naukri": {
+      "keywords": [
+        "naukri.com"
+      ],
+      "domains": [
+        "naukri.com"
+      ]
+    }
+  }
+}
