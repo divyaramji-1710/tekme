@@ -1,4 +1,4 @@
-"""SCAMPRINT FastAPI application.
+"""TEKMĒ (formerly SCAMPRINT) FastAPI application — optional local API and static host for the UI.
 
 Run:  python -m backend.main          (binds 127.0.0.1:8000)
 
@@ -43,7 +43,7 @@ async def lifespan(app: FastAPI):
 
 def create_app() -> FastAPI:
     # Swagger/ReDoc pages load JavaScript from a public CDN, so they are disabled; /openapi.json remains.
-    app = FastAPI(title="SCAMPRINT", version="1.0.0", lifespan=lifespan, docs_url=None, redoc_url=None,
+    app = FastAPI(title="TEKMĒ", version="2.0.0", lifespan=lifespan, docs_url=None, redoc_url=None,
                   description="Offline, explainable scam-message detector. All inference is local.")
     app.add_middleware(CORSMiddleware, allow_origins=config.CORS_ORIGINS, allow_methods=["GET", "POST"],
                        allow_headers=["Content-Type"], allow_credentials=False)
@@ -67,7 +67,8 @@ def create_app() -> FastAPI:
         resp.headers["Referrer-Policy"] = "no-referrer"
         resp.headers["Content-Security-Policy"] = (
             "default-src 'self'; connect-src 'self' http://127.0.0.1:8000 http://localhost:8000; "
-            "img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'")
+            "img-src 'self' data: blob:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; "
+            "worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'")
         return resp
 
     from backend.api.routes import router

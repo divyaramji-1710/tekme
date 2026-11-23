@@ -106,6 +106,11 @@ export class LinearTextModel {
     return out;
   }
   logit(text: string): number { return this.decision(this.vector(text))[0]; }
+  /** Is `term` a feature of part `p` (e.g. a known word for the word vectoriser)? */
+  inVocab(p: number, term: string): boolean {
+    const si = this.index.get(term);
+    return si !== undefined && this.parts[p].col[si] >= 0;
+  }
   termOf(col: number): string { return this.strings[this.termIndex[col]]; }
   partOf(col: number): string { let o = 0; for (const p of this.parts) { if (col < o + p.spec.n_features) return p.spec.name; o += p.spec.n_features; } return ""; }
 

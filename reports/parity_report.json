@@ -1,0 +1,297 @@
+{
+ "generated_by": "frontend/tests/parity.test.ts",
+ "corpus": "ml/artifacts/parity/corpus.jsonl (built by python -m ml.export.parity)",
+ "n_messages": 5072,
+ "seconds": 79.6,
+ "agreement": {
+  "normalized": 1,
+  "model_text": 1,
+  "language": 1,
+  "entities": 1,
+  "obfuscation": 1,
+  "features": 1,
+  "tactics": 1,
+  "signals": 1,
+  "benign": 1,
+  "verdict": 1,
+  "category": 1,
+  "explanation": 1,
+  "key_factors": 1,
+  "semantic_terms": 0.999211,
+  "highlights": 1
+ },
+ "mismatches": {
+  "normalized": 0,
+  "model_text": 0,
+  "language": 0,
+  "entities": 0,
+  "obfuscation": 0,
+  "features": 0,
+  "tactics": 0,
+  "signals": 0,
+  "benign": 0,
+  "verdict": 0,
+  "category": 0,
+  "explanation": 0,
+  "key_factors": 0,
+  "semantic_terms": 4,
+  "highlights": 0
+ },
+ "max_abs_difference": {
+  "semantic_logit": 2.606761526635637e-7,
+  "specialist_logit": 2.365573159579526e-7,
+  "fusion_logit": 2.479804992461254e-7,
+  "scam_probability": 0.000003616664358441213,
+  "category_probability": 3.1277428647058514e-8
+ },
+ "by_source": {
+  "test": {
+   "n": 3138,
+   "verdict": 3138,
+   "category": 3138
+  },
+  "val": {
+   "n": 500,
+   "verdict": 500,
+   "category": 500
+  },
+  "test_b": {
+   "n": 400,
+   "verdict": 400,
+   "category": 400
+  },
+  "adversarial": {
+   "n": 1000,
+   "verdict": 1000,
+   "category": 1000
+  },
+  "examples": {
+   "n": 14,
+   "verdict": 14,
+   "category": 14
+  },
+  "edge": {
+   "n": 20,
+   "verdict": 20,
+   "category": 20
+  }
+ },
+ "precision_note": "Weights are stored as float32 in the browser model; the Python model uses float64.",
+ "examples": {
+  "semantic_terms": [
+   {
+    "text": "Do not share! <NUMBER> is your to generate the Service Request for CRN XXXXXXXX953. To report fraud, click <URL> - Kotak Bank",
+    "py": [
+     [
+      "click",
+      2.1811
+     ],
+     [
+      "request",
+      1.1996
+     ],
+     [
+      "service",
+      1.1134
+     ],
+     [
+      "xurlx",
+      0.998
+     ],
+     [
+      "xnumx",
+      0.7498
+     ],
+     [
+      "to",
+      0.7126
+     ],
+     [
+      "fraud",
+      0.6967
+     ],
+     [
+      "bank",
+      0.5257
+     ]
+    ],
+    "js": [
+     [
+      "click",
+      2.1811
+     ],
+     [
+      "request",
+      1.1996
+     ],
+     [
+      "service",
+      1.1134
+     ],
+     [
+      "xurlx",
+      0.998
+     ],
+     [
+      "xnumx",
+      0.7497
+     ],
+     [
+      "to",
+      0.7126
+     ],
+     [
+      "fraud",
+      0.6967
+     ],
+     [
+      "bank",
+      0.5257
+     ]
+    ]
+   },
+   {
+    "text": "Attempted delivery of your THINKLEARN SURFACE shipment, but could not reach you. If you want it to be de - livered , kindly call back <PHONE_NUMBER>",
+    "py": [
+     [
+      "kindly",
+      1.6192
+     ],
+     [
+      "attempted",
+      1.1475
+     ],
+     [
+      "thinklearn",
+      0.7491
+     ],
+     [
+      "xphonex",
+      0.7409
+     ],
+     [
+      "delivery",
+      0.6319
+     ],
+     [
+      "could",
+      0.5671
+     ],
+     [
+      "be",
+      0.3789
+     ],
+     [
+      "to",
+      0.3477
+     ]
+    ],
+    "js": [
+     [
+      "kindly",
+      1.6192
+     ],
+     [
+      "attempted",
+      1.1475
+     ],
+     [
+      "thinklearn",
+      0.7491
+     ],
+     [
+      "xphonex",
+      0.7408
+     ],
+     [
+      "delivery",
+      0.6319
+     ],
+     [
+      "could",
+      0.5671
+     ],
+     [
+      "be",
+      0.3789
+     ],
+     [
+      "to",
+      0.3477
+     ]
+    ]
+   },
+   {
+    "text": "Final reminder: Book club is TONIGHT 7pm at Jen's. Bring wine 🍷",
+    "py": [
+     [
+      "bring",
+      -1.432
+     ],
+     [
+      "wine",
+      1.1214
+     ],
+     [
+      "final",
+      0.9802
+     ],
+     [
+      "tonight",
+      -0.8595
+     ],
+     [
+      "7pm",
+      -0.685
+     ],
+     [
+      "at",
+      -0.6329
+     ],
+     [
+      "jen",
+      -0.4586
+     ],
+     [
+      "book",
+      -0.333
+     ]
+    ],
+    "js": [
+     [
+      "bring",
+      -1.432
+     ],
+     [
+      "wine",
+      1.1214
+     ],
+     [
+      "final",
+      0.9802
+     ],
+     [
+      "tonight",
+      -0.8596
+     ],
+     [
+      "7pm",
+      -0.685
+     ],
+     [
+      "at",
+      -0.6329
+     ],
+     [
+      "jen",
+      -0.4586
+     ],
+     [
+      "book",
+      -0.333
+     ]
+    ]
+   }
+  ]
+ }
+}

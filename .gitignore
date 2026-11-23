@@ -12,3 +12,4 @@ reports/*_log.txt
 
 # parity corpus contains dataset texts
 ml/artifacts/parity/
+ml/datasets/feedback/

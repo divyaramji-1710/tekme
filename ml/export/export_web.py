@@ -183,6 +183,16 @@ def build_rules() -> dict:
     }
 
 
+def _finite(o):
+    if isinstance(o, float) and not np.isfinite(o):
+        return None
+    if isinstance(o, dict):
+        return {k: _finite(v) for k, v in o.items()}
+    if isinstance(o, list):
+        return [_finite(v) for v in o]
+    return o
+
+
 def main() -> int:
     bundle = joblib.load(MODEL_BUNDLE)
     OUT_MODEL.mkdir(parents=True, exist_ok=True)
@@ -217,7 +227,23 @@ def main() -> int:
     (OUT_MODEL / "model.bin").write_bytes(data)
     (OUT_MODEL / "model.json").write_text(json.dumps(manifest, indent=1), encoding="utf-8")
     rules = build_rules()
+    body = json.dumps(rules, ensure_ascii=False, sort_keys=True)
+    rules["version"] = {"id": hashlib.sha256(body.encode("utf-8")).hexdigest()[:12],
+                        "model_version": meta.get("model_version"), "trained_at": meta.get("trained_at")}
     (OUT_RULES / "rules.json").write_text(json.dumps(rules, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    examples = json.loads((ROOT / "backend" / "data" / "examples.json").read_text(encoding="utf-8"))
+    (OUT_RULES / "examples.json").write_text(json.dumps(examples, ensure_ascii=False, indent=1), encoding="utf-8")
+    # Measured reports for the UI (the UI never hard-codes a metric).
+    data_dir = ROOT / "frontend" / "public" / "data"
+    data_dir.mkdir(parents=True, exist_ok=True)
+    for name in ("metrics.json", "training_report.json", "dataset_report.json", "intel_report.json", "parity_report.json"):
+        src = ROOT / "reports" / name
+        if src.exists():
+            # Python's json writes NaN, which browsers reject: convert non-finite numbers to null.
+            obj = json.loads(src.read_text(encoding="utf-8"))
+            if name == "parity_report.json":
+                obj.pop("examples", None)  # mismatch examples are test-split texts: keep them out of the shipped app
+            (data_dir / name).write_text(json.dumps(_finite(obj), ensure_ascii=False, allow_nan=False), encoding="utf-8")
     print(f"model.bin {len(data) / 1e6:.2f} MB, {len(strings)} strings; rules.json "
           f"{(OUT_RULES / 'rules.json').stat().st_size / 1e3:.0f} kB")
     return 0

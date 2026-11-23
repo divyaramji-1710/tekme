@@ -1,14 +1,14 @@
 import { useState } from "react";
 
-// Hand-built SVG charts: no chart library, no remote assets. Colours validated
-// (dataviz validator, dark mode, surface #111a2e): series-1 #3987e5, series-2 #d95926.
-const S1 = "#3987e5";
-const GRID = "#24314d";
-const INK2 = "#a9b4c7";
-const INK3 = "#7c889d";
+// Hand-built SVG charts: no chart library, no remote assets. Colours come from theme tokens validated with the
+// dataviz validator (dark: #c27f42 / #4b93ea on #1f120e; light: #a85a2a / #2f6fa8 on #fffcf8).
+const S1 = "var(--t-series-1)";
+const S2 = "var(--t-series-2)";
+const GRID = "var(--t-line)";
+const INK2 = "var(--t-ink-2)";
+const INK3 = "var(--t-ink-3)";
 
 interface Tip { x: number; y: number; lines: string[] }
-
 function Tooltip({ tip }: { tip: Tip | null }) {
   if (!tip) return null;
   return (
@@ -19,17 +19,23 @@ function Tooltip({ tip }: { tip: Tip | null }) {
   );
 }
 
-/** Horizontal bar list: one series, one axis, value labels on the right. */
-export function BarList({ data, max = 1, format = (v: number) => v.toFixed(3), color = S1, ariaLabel, detail }: {
-  data: { label: string; value: number; note?: string }[]; max?: number; format?: (v: number) => string; color?: string; ariaLabel: string;
-  detail?: (d: { label: string; value: number; note?: string }) => string[];
+/** Horizontal bars, one series (or two with a legend), one axis, value labels at the bar end. */
+export function BarList({ data, max = 1, format = (v: number) => v.toFixed(3), ariaLabel, series2, legend, labelW = 180 }: {
+  data: { label: string; value: number; value2?: number; note?: string }[]; max?: number; format?: (v: number) => string; ariaLabel: string;
+  series2?: boolean; legend?: [string, string]; labelW?: number;
 }) {
   const [tip, setTip] = useState<Tip | null>(null);
-  const rowH = 30, labelW = 170, valueW = 64, W = 640;
+  const rowH = series2 ? 38 : 30, valueW = 64, W = 680;
   const plotW = W - labelW - valueW;
   const H = data.length * rowH + 22;
   return (
     <div className="relative w-full overflow-x-auto scroll-thin">
+      {series2 && legend && (
+        <div className="mb-2 flex gap-4 text-xs text-ink-2">
+          <span className="flex items-center gap-1.5"><span className="h-2.5 w-4 rounded-sm" style={{ background: S1 }} />{legend[0]}</span>
+          <span className="flex items-center gap-1.5"><span className="h-2.5 w-4 rounded-sm" style={{ background: S2 }} />{legend[1]}</span>
+        </div>
+      )}
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full min-w-[480px]" role="img" aria-label={ariaLabel} onMouseLeave={() => setTip(null)}>
         {[0, 0.25, 0.5, 0.75, 1].map((f) => (
           <g key={f}>
@@ -39,17 +45,22 @@ export function BarList({ data, max = 1, format = (v: number) => v.toFixed(3), c
         ))}
         {data.map((d, i) => {
           const y = i * rowH + 6;
-          const w = Math.max(0, Math.min(1, d.value / max)) * plotW;
+          const w1 = Math.max(0, Math.min(1, d.value / max)) * plotW;
+          const w2 = Math.max(0, Math.min(1, (d.value2 ?? 0) / max)) * plotW;
+          const h = series2 ? 13 : 16;
           return (
             <g key={d.label}>
-              <text x={labelW - 10} y={y + 13} fill={INK2} fontSize={12} textAnchor="end">{d.label}</text>
-              <rect x={labelW} y={y + 2} width={Math.max(w, 2)} height={16} rx={4} fill={color} />
-              <text x={labelW + w + 6} y={y + 14} fill={INK2} fontSize={11}>{format(d.value)}</text>
-              {/* hit target larger than the mark */}
+              <text x={labelW - 10} y={y + (series2 ? 18 : 13)} fill={INK2} fontSize={12} textAnchor="end">{d.label}</text>
+              <rect x={labelW} y={y + 2} width={Math.max(w1, 2)} height={h} rx={4} fill={S1} />
+              <text x={labelW + w1 + 6} y={y + 13} fill={INK2} fontSize={11}>{format(d.value)}</text>
+              {series2 && d.value2 !== undefined && <>
+                <rect x={labelW} y={y + h + 4} width={Math.max(w2, 2)} height={h} rx={4} fill={S2} />
+                <text x={labelW + w2 + 6} y={y + h + 15} fill={INK2} fontSize={11}>{format(d.value2)}</text>
+              </>}
               <rect x={0} y={y - 4} width={W} height={rowH} fill="transparent"
                 onMouseMove={(e) => {
                   const r = (e.currentTarget.ownerSVGElement as SVGSVGElement).getBoundingClientRect();
-                  setTip({ x: e.clientX - r.left, y: e.clientY - r.top, lines: detail ? detail(d) : [d.label, format(d.value), ...(d.note ? [d.note] : [])] });
+                  setTip({ x: e.clientX - r.left, y: e.clientY - r.top, lines: [d.label, `${legend?.[0] ?? "Value"}: ${format(d.value)}`, ...(d.value2 !== undefined ? [`${legend?.[1] ?? "Value 2"}: ${format(d.value2)}`] : []), ...(d.note ? [d.note] : [])] });
                 }} />
             </g>
           );
@@ -60,8 +71,9 @@ export function BarList({ data, max = 1, format = (v: number) => v.toFixed(3), c
   );
 }
 
+export interface RelBin { bin_low: number; bin_high: number; count: number; mean_predicted: number | null; observed_scam_rate: number | null }
 /** Reliability diagram: predicted vs observed scam rate, with the perfect-calibration diagonal. */
-export function ReliabilityChart({ bins }: { bins: { bin_low: number; bin_high: number; count: number; mean_predicted: number | null; observed_scam_rate: number | null }[] }) {
+export function ReliabilityChart({ bins, label = "TEKMĒ (test split)" }: { bins: RelBin[]; label?: string }) {
   const [tip, setTip] = useState<Tip | null>(null);
   const W = 360, H = 300, m = { l: 44, r: 14, t: 12, b: 40 };
   const pw = W - m.l - m.r, ph = H - m.t - m.b;
@@ -83,7 +95,7 @@ export function ReliabilityChart({ bins }: { bins: { bin_low: number; bin_high: 
         <path d={path} fill="none" stroke={S1} strokeWidth={2} />
         {pts.map((b) => (
           <g key={b.bin_low}>
-            <circle cx={x(b.mean_predicted!)} cy={y(b.observed_scam_rate!)} r={4.5} fill={S1} stroke="#111a2e" strokeWidth={2} />
+            <circle cx={x(b.mean_predicted!)} cy={y(b.observed_scam_rate!)} r={4.5} fill={S1} stroke="var(--t-surface)" strokeWidth={2} />
             <circle cx={x(b.mean_predicted!)} cy={y(b.observed_scam_rate!)} r={14} fill="transparent"
               onMouseMove={(e) => {
                 const r = (e.currentTarget.ownerSVGElement as SVGSVGElement).getBoundingClientRect();
@@ -96,19 +108,35 @@ export function ReliabilityChart({ bins }: { bins: { bin_low: number; bin_high: 
         <text x={12} y={m.t + ph / 2} fill={INK2} fontSize={11} textAnchor="middle" transform={`rotate(-90 12 ${m.t + ph / 2})`}>Observed scam rate</text>
       </svg>
       <div className="mt-2 flex gap-4 text-xs text-ink-2">
-        <span className="flex items-center gap-1.5"><span className="h-0.5 w-5 rounded" style={{ background: S1 }} />SCAMPRINT (test)</span>
-        <span className="flex items-center gap-1.5"><span className="h-0 w-5 border-t border-dashed" style={{ borderColor: INK3 }} />Perfect calibration</span>
+        <span className="flex items-center gap-1.5"><span className="h-0.5 w-5 rounded" style={{ background: S1 }} />{label}</span>
+        <span className="flex items-center gap-1.5"><span className="h-0 w-5 border-t border-dashed" style={{ borderColor: "var(--t-ink-3)" }} />Perfect calibration</span>
       </div>
       <Tooltip tip={tip} />
     </div>
   );
 }
 
-/** Confidence meter: a single bar, labelled - not a gauge. */
-export function ConfidenceBar({ value, tone }: { value: number; tone: "scam" | "safe" }) {
+/** Small multiples heat table: rows x columns with shaded cells and the value printed in each cell. */
+export function HeatTable({ rows, cols, value, format = (v: number) => `${Math.round(v * 100)}%`, caption }: {
+  rows: { key: string; label: string }[]; cols: { key: string; label: string }[]; value: (r: string, c: string) => number | null; format?: (v: number) => string; caption: string;
+}) {
   return (
-    <div className="h-2 w-full overflow-hidden rounded-full bg-surface-3" role="meter" aria-valuemin={0} aria-valuemax={100} aria-valuenow={Math.round(value * 100)} aria-label="Confidence">
-      <div className={`h-full rounded-full ${tone === "scam" ? "bg-scam" : "bg-safe"}`} style={{ width: `${value * 100}%`, transition: "width 300ms ease-out" }} />
+    <div className="overflow-x-auto scroll-thin">
+      <table className="w-full min-w-[620px] border-separate border-spacing-[2px] text-[0.8rem]">
+        <caption className="sr-only">{caption}</caption>
+        <thead><tr><th className="p-2 text-left font-medium text-ink-3">Source</th>{cols.map((c) => <th key={c.key} scope="col" className="p-2 text-center font-medium text-ink-3">{c.label}</th>)}</tr></thead>
+        <tbody>
+          {rows.map((r) => (
+            <tr key={r.key}>
+              <th scope="row" className="p-2 text-left font-medium text-ink">{r.label}</th>
+              {cols.map((c) => {
+                const v = value(r.key, c.key);
+                return <td key={c.key} className="rounded-md p-2 text-center tabular-nums text-ink" style={{ background: v === null ? "transparent" : `color-mix(in srgb, var(--t-series-1) ${Math.round(8 + v * 80)}%, var(--t-surface))` }}>{v === null ? "—" : format(v)}</td>;
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

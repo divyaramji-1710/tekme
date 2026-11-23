@@ -1,211 +1,168 @@
 import { useEffect, useRef, useState } from "react";
-import { Dna, Eraser, Info, Link2, ListChecks, ScanSearch, ShieldAlert, ShieldCheck, Sparkles, TriangleAlert } from "lucide-react";
-import { api, ApiError, CATEGORY_LABELS, LANGUAGE_LABELS, MAX_CHARS, type Example, type Prediction } from "../services/api";
-import { Badge, Button, Card, Empty, ErrorBox, Spinner, confPct } from "../components/ui";
-import { ConfidenceBar } from "../components/charts";
-import { HighlightedText, HighlightLegend } from "../components/HighlightedText";
+import { Download, Fingerprint, History, Info, ListChecks, Microscope, ScanSearch, ShieldCheck, Sparkles, Trash2 } from "lucide-react";
+import { go, useApp } from "../app/context";
+import { PageHeader } from "../components/Shell";
+import { ExampleChips, MessageInput, useAnalysis } from "../components/AnalyzerWidget";
+import { CATEGORY_LABEL, ConfidenceMeter, EvidenceDossier, EvidenceHeatmap, Explanation, FamiliarityNote, FeedbackBar, GuidancePanel, KeyFactors, ScamDNA, VerdictBanner } from "../components/result";
+import { Button, Chip, Empty, ErrorBox, Panel, confPct, levelTone } from "../components/ui";
+import { MarkLoader } from "../brand/EvidenceMark";
+import { redact } from "../analysis/redact";
+import { download } from "../analysis/batch";
+import { clearHistory, loadHistory, type HistoryItem } from "../analysis/store";
+import type { Analysis } from "../analysis/analyze";
 
-export default function Analyzer({ onSendToLab }: { onSendToLab: (text: string) => void }) {
-  const [text, setText] = useState("");
-  const [submitted, setSubmitted] = useState("");
-  const [result, setResult] = useState<Prediction | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [examples, setExamples] = useState<Example[]>([]);
-  const ref = useRef<HTMLTextAreaElement>(null);
+export function exportReport(a: Analysis, opt: Parameters<typeof redact>[1] | null): string {
+  const r = (t: string) => (opt ? redact(t, opt) : t);
+  const lines = [
+    `# TEKMĒ analysis report`, ``,
+    `- Analysed: ${a.analysed_at} (on this device, model ${a.model_version})`,
+    `- Verdict: ${a.uncertainty.display_verdict} (model verdict ${a.core.verdict}, calibrated confidence ${confPct(a.core.confidence)})`,
+    `- Category: ${a.core.category ? CATEGORY_LABEL[a.core.category] : "—"}`,
+    `- Redaction: ${opt ? Object.entries(opt).filter(([, v]) => v).map(([k]) => k).join(", ") || "none" : "none"}`, ``,
+    `## Message`, "", "> " + r(a.input.text).replace(/\n/g, "\n> "), ``,
+    `## Explanation`, "", a.core.explanation, ``,
+    `## Tactics`, "", ...(a.core.tactics.length ? a.core.tactics.map((t) => `- ${t.label} (${t.strength})${opt ? "" : ": " + t.evidence.map((e) => `“${e.text}”`).join(", ")}`) : ["- none detected"]), ``,
+    `## Risk signals`, "", ...(a.core.risk_signals.length ? a.core.risk_signals.map((s) => `- [${s.severity}] ${s.label}${opt ? "" : ": " + s.detail}`) : ["- none"]), ``,
+    `## Guidance`, "", `**${a.guidance.headline}**`, ...a.guidance.steps.map((s) => `- ${s.text}`), ``,
+    `_Generated offline by TEKMĒ. Rule findings are supporting evidence; the verdict is a calibrated statistical estimate, not proof._`,
+  ];
+  return lines.join("\n");
+}
 
-  useEffect(() => { api.examples().then((r) => setExamples(r.examples)).catch(() => setExamples([])); }, []);
+/** JSON export. With redaction on, only redacted text is included: no evidence spans, hosts or normalised text. */
+export function exportJson(a: Analysis, opt: Parameters<typeof redact>[1] | null) {
+  const r = (t: string) => (opt ? redact(t, opt) : t);
+  return {
+    format: "tekme-analysis/1", analysed_at: a.analysed_at, model_version: a.model_version, redacted: !!opt,
+    message: r(a.input.text),
+    verdict: a.core.verdict, display_verdict: a.uncertainty.display_verdict, category: a.core.category,
+    calibrated_confidence: a.core.confidence, scam_probability: a.core.scam_probability, borderline: a.core.borderline,
+    uncertainty_reasons: a.uncertainty.reasons,
+    tactics: a.core.tactics.map((t) => ({ id: t.id, label: t.label, strength: t.strength, ...(opt ? {} : { evidence: t.evidence }) })),
+    risk_signals: a.core.risk_signals.map((s) => ({ id: s.id, label: s.label, severity: s.severity, ...(opt ? {} : { detail: s.detail, evidence: s.evidence }) })),
+    link_indicators: a.urls.map((u) => ({ ...(opt ? {} : { url: u.url, host: u.host }), risk: u.risk, indicators: u.indicators.map((i) => i.id) })),
+    payment_indicators: a.payment.indicators.map((i) => i.id),
+    brand_claims: a.brands.map((b) => ({ brand: b.brand, link_relation: b.link_relation })),
+    explanation: a.core.explanation, key_factors: a.core.key_factors, guidance: a.guidance,
+  };
+}
 
-  // deep link: #analyzer?text=... (used for screenshots / demos); runs real inference
-  useEffect(() => {
-    const q = new URLSearchParams(window.location.hash.split("?")[1] ?? "");
-    const t = q.get("text");
-    if (t) { setText(t); void analyze(t); }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  async function analyze(input = text) {
-    const msg = input.trim();
-    if (!msg) { setError("Paste a message to analyse."); return; }
-    if (msg.length > MAX_CHARS) { setError(`Messages are limited to ${MAX_CHARS} characters.`); return; }
-    setLoading(true); setError(null);
-    try {
-      const r = await api.predict(input);
-      setResult(r); setSubmitted(input);
-    } catch (e) {
-      setError(e instanceof ApiError ? e.message : "Unexpected error.");
-      setResult(null);
-    } finally { setLoading(false); }
-  }
-
-  const over = text.length > MAX_CHARS;
-  const groups = Array.from(new Set(examples.map((e) => e.group)));
-
-  return (
-    <div className="grid gap-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)]">
-      <div className="space-y-6">
-        <Card title="Message Analyzer" icon={<ScanSearch className="h-4 w-4" />}>
-          <label htmlFor="msg" className="sr-only">Message text</label>
-          <textarea id="msg" ref={ref} value={text} onChange={(e) => setText(e.target.value)}
-            onKeyDown={(e) => { if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) void analyze(); }}
-            placeholder="Paste an SMS or WhatsApp message here…" rows={8}
-            className="w-full resize-y rounded-lg border border-line bg-navy/60 p-3 text-[15px] leading-6 text-ink placeholder:text-ink-3 focus:border-accent focus:outline-none" />
-          <div className="mt-2 flex items-center justify-between text-xs">
-            <span className={over ? "text-scam" : "text-ink-3"}>{text.length.toLocaleString()} / {MAX_CHARS.toLocaleString()} characters</span>
-            <span className="hidden text-ink-3 sm:inline">Ctrl + Enter to analyse</span>
-          </div>
-          <div className="mt-4 flex flex-wrap items-center gap-2">
-            <Button onClick={() => analyze()} disabled={loading || !text.trim() || over}>
-              {loading ? <Spinner label="Analysing" /> : <><ScanSearch className="h-4 w-4" />Analyse</>}
-            </Button>
-            <Button variant="outline" onClick={() => { setText(""); setResult(null); setError(null); ref.current?.focus(); }} disabled={loading || (!text && !result)}>
-              <Eraser className="h-4 w-4" />Clear
-            </Button>
-            <div className="ml-auto">
-              <label htmlFor="ex" className="sr-only">Load an example message</label>
-              <select id="ex" value="" onChange={(e) => { const ex = examples.find((x) => x.id === e.target.value); if (ex) { setText(ex.text); setResult(null); } }}
-                className="rounded-lg border border-line-2 bg-surface-2 px-3 py-2 text-sm text-ink-2 focus:outline-none">
-                <option value="">Load example…</option>
-                {groups.map((g) => <optgroup key={g} label={g}>{examples.filter((e) => e.group === g).map((e) => <option key={e.id} value={e.id}>{e.title}</option>)}</optgroup>)}
-              </select>
-            </div>
-          </div>
-          <p className="mt-4 flex items-start gap-2 text-xs text-ink-3"><Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />Analysis runs on this computer. The message is not stored or sent anywhere.</p>
-        </Card>
-        {error && <ErrorBox message={error} onRetry={text.trim() ? () => analyze() : undefined} />}
-        {result && <ScamDNA result={result} />}
-      </div>
-
-      <div className="space-y-6">
-        {!result && !loading && (
-          <Card><Empty icon={<ShieldCheck className="h-6 w-6" />} title="No message analysed yet">Paste a message or load an example. You will see a verdict, scam category, calibrated confidence and the evidence behind it.</Empty></Card>
-        )}
-        {loading && !result && <Card><div className="py-16 text-center"><Spinner label="Running local models…" /></div></Card>}
-        {result && <Result result={result} text={submitted} onSendToLab={() => onSendToLab(submitted)} />}
-      </div>
-    </div>
+function HistoryPanel({ onPick }: { onPick: (t: string) => void }) {
+  const { settings } = useApp();
+  const [items, setItems] = useState<HistoryItem[]>(() => loadHistory(settings.retentionDays));
+  useEffect(() => { const i = setInterval(() => setItems(loadHistory(settings.retentionDays)), 2000); return () => clearInterval(i); }, [settings.retentionDays]);
+  if (!settings.history) return (
+    <Panel title="Local history" icon={<History className="h-5 w-5" />}>
+      <p className="text-sm text-ink-2">History is off. When enabled in <a className="text-accent underline" href="#/settings">Settings</a>, analysed messages are kept only in this browser for {settings.retentionDays} day(s).</p>
+    </Panel>
   );
-}
-
-function Result({ result: r, text, onSendToLab }: { result: Prediction; text: string; onSendToLab: () => void }) {
-  const scam = r.verdict === "SCAM";
   return (
-    <div className="space-y-6 fade-in">
-      <section className={`card overflow-hidden ${scam ? "border-scam/50" : "border-safe/40"}`} aria-live="polite">
-        <div className={`flex flex-wrap items-center gap-4 p-5 ${scam ? "bg-scam-bg" : "bg-safe-bg"}`}>
-          <div className={`rounded-xl p-3 ${scam ? "bg-scam/15 text-scam" : "bg-safe/15 text-safe"}`}>
-            {scam ? <ShieldAlert className="h-8 w-8" aria-hidden /> : <ShieldCheck className="h-8 w-8" aria-hidden />}
-          </div>
-          <div className="min-w-0 flex-1">
-            <div className="text-xs font-medium uppercase tracking-wider text-ink-3">Verdict</div>
-            <div className={`text-3xl font-bold tracking-tight ${scam ? "text-scam" : "text-safe"}`}>{r.verdict}</div>
-          </div>
-          <div className="grid grid-cols-2 gap-6 text-sm">
-            <div>
-              <div className="text-xs text-ink-3">Category</div>
-              <div className="font-semibold text-ink">{r.category ? CATEGORY_LABELS[r.category] : "—"}</div>
-            </div>
-            <div>
-              <div className="text-xs text-ink-3">Confidence</div>
-              <div className="font-semibold tabular-nums text-ink">{confPct(r.confidence)}</div>
-            </div>
-          </div>
-        </div>
-        <div className="space-y-4 p-5">
-          <div>
-            <ConfidenceBar value={r.confidence} tone={scam ? "scam" : "safe"} />
-            <p className="mt-2 text-xs text-ink-3">{r.confidence_interpretation.text}</p>
-          </div>
-          {r.borderline && <div className="flex items-start gap-2 rounded-lg border border-warn/40 bg-warn/10 p-3 text-sm text-ink"><TriangleAlert className="mt-0.5 h-4 w-4 shrink-0 text-warn" />Borderline score — the evidence is mixed. Verify through an official channel before acting.</div>}
-          <p className="text-[15px] leading-7 text-ink">{r.explanation}</p>
-          <div className="flex flex-wrap gap-2">
-            <Badge tone="info">{LANGUAGE_LABELS[r.language] ?? r.language}</Badge>
-            <Badge>scam probability {confPct(r.scam_probability)}</Badge>
-            <Badge>{r.latency_ms.toFixed(0)} ms on this device</Badge>
-            {Object.values(r.obfuscation).some((v) => v > 0) && <Badge tone="warn">obfuscation detected</Badge>}
-          </div>
-        </div>
-      </section>
-
-      <Card title="Evidence in the message" icon={<Sparkles className="h-4 w-4" />}
-        action={<Button variant="ghost" onClick={onSendToLab} title="Test this message in the Mutation Lab"><Dna className="h-4 w-4" />Stress-test</Button>}>
-        <div className="rounded-lg border border-line bg-navy/50 p-4"><HighlightedText text={text} highlights={r.highlights} /></div>
-        <div className="mt-3"><HighlightLegend /></div>
-        {r.normalized_text.trim() !== text.trim() && (
-          <details className="mt-4 text-sm">
-            <summary className="cursor-pointer text-ink-2 hover:text-ink">Show normalised text (after de-obfuscation)</summary>
-            <p className="mt-2 whitespace-pre-wrap break-words rounded-lg bg-surface-2 p-3 font-mono text-xs text-ink-2">{r.normalized_text}</p>
-          </details>
-        )}
-      </Card>
-
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card title="Risk signals" icon={<Link2 className="h-4 w-4" />}>
-          {r.risk_signals.length === 0 ? <p className="text-sm text-ink-3">No structural risk signals (links, numbers, payment details). Absence of signals is not proof of safety.</p> : (
-            <ul className="space-y-3">
-              {r.risk_signals.map((s, i) => (
-                <li key={i} className="text-sm">
-                  <div className="flex items-center gap-2"><SeverityDot sev={s.severity} /><span className="font-medium text-ink">{s.label}</span><span className="text-xs text-ink-3">{s.severity}</span></div>
-                  <p className="ml-4 mt-0.5 text-ink-3">{s.detail}</p>
-                </li>
-              ))}
-            </ul>
-          )}
-          {r.benign.templates.length > 0 && (
-            <div className="mt-4 border-t border-line pt-4">
-              <div className="mb-2 text-xs font-medium uppercase tracking-wide text-ink-3">Genuine-message patterns</div>
-              <ul className="space-y-1 text-sm text-ink-2">{r.benign.descriptions.map((d) => <li key={d} className="flex gap-2"><ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-safe" />{d}</li>)}</ul>
-            </div>
-          )}
-          {r.benign.conflict && <p className="mt-3 rounded-lg border border-scam/40 bg-scam-bg p-3 text-sm text-ink">Conflict: {r.benign.conflict_reasons.join("; ")}.</p>}
-        </Card>
-        <Card title="What drove the decision" icon={<ListChecks className="h-4 w-4" />}>
-          <ul className="space-y-2">
-            {r.key_factors.map((f) => (
-              <li key={f.feature} className="text-sm">
-                <div className="flex items-center justify-between gap-2"><span className="text-ink">{f.label}</span>
-                  <span className={`text-xs tabular-nums ${f.contribution > 0 ? "text-scam" : "text-safe"}`}>{f.contribution > 0 ? "+" : ""}{f.contribution.toFixed(2)}</span></div>
-                <div className="mt-1 flex h-1.5 overflow-hidden rounded-full bg-surface-3">
-                  <div className={f.contribution > 0 ? "bg-scam" : "bg-safe"} style={{ width: `${Math.min(100, Math.abs(f.contribution) * 12)}%` }} />
-                </div>
-              </li>
-            ))}
-          </ul>
-          <p className="mt-4 text-xs text-ink-3">Contributions to the fusion model's log-odds, relative to an average training message (+ towards SCAM, − towards SAFE). {r.evidence_note}</p>
-        </Card>
-      </div>
-    </div>
-  );
-}
-
-function SeverityDot({ sev }: { sev: string }) {
-  const c = sev === "high" ? "bg-scam" : sev === "medium" ? "bg-warn" : sev === "low" ? "bg-[#8cb8f0]" : "bg-ink-3";
-  return <span className={`inline-block h-2 w-2 rounded-full ${c}`} aria-hidden />;
-}
-
-function ScamDNA({ result: r }: { result: Prediction }) {
-  const strengthTone = { strong: "scam", moderate: "warn", weak: "neutral" } as const;
-  return (
-    <Card title="Scam DNA — manipulation tactics" icon={<Dna className="h-4 w-4" />}>
-      {r.tactics.length === 0 ? (
-        <p className="text-sm text-ink-3">No manipulation tactics were detected in the wording.</p>
-      ) : (
-        <ul className="space-y-4">
-          {r.tactics.map((t) => (
-            <li key={t.id}>
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="font-medium text-ink">{t.label}</span>
-                <Badge tone={strengthTone[t.strength]}>{t.strength}</Badge>
-              </div>
-              <p className="mt-1 text-sm text-ink-3">{t.description}</p>
-              <div className="mt-2 flex flex-wrap gap-1.5">
-                {t.evidence.map((e, i) => <span key={i} className="rounded border border-line-2 bg-surface-2 px-2 py-0.5 font-mono text-xs text-ink-2">“{e.text}”</span>)}
-              </div>
-            </li>
+    <Panel title="Local history" icon={<History className="h-5 w-5" />} action={items.length ? <Button variant="ghost" onClick={() => { clearHistory(); setItems([]); }}><Trash2 className="h-4 w-4" aria-hidden />Clear</Button> : undefined}>
+      {!items.length ? <p className="text-sm text-ink-3">No saved analyses yet.</p> : (
+        <ul className="max-h-72 space-y-1.5 overflow-y-auto scroll-thin">
+          {items.map((h) => (
+            <li key={h.id}><button onClick={() => onPick(h.text)} className="flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm hover:bg-surface-2">
+              <Chip tone={h.display === "SCAM" ? "scam" : h.display === "SAFE" ? "safe" : "uncertain"}>{h.display}</Chip>
+              <span className="truncate text-ink-2">{h.text}</span>
+            </button></li>
           ))}
         </ul>
       )}
-      <p className="mt-4 border-t border-line pt-3 text-xs text-ink-3">Strength is a documented rule-based level (weak = single cue; moderate = several cues or a cue plus a link/number; strong = moderate plus an action request) — not a probability. Matches are observed wording, not proof of intent.</p>
-    </Card>
+    </Panel>
+  );
+}
+
+export default function AnalyzerPage({ params }: { params: URLSearchParams }) {
+  const { status, error: loadError, retry, settings, engine } = useApp();
+  const { analysis: a, error, busy, run, ready } = useAnalysis();
+  const [text, setText] = useState(params.get("text") ?? "");
+  const [sender, setSender] = useState("");
+  const [mode, setMode] = useState<"message" | "url" | "upi">("message");
+  const [redactOn, setRedactOn] = useState(true);
+  const guidanceRef = useRef<HTMLDivElement>(null);
+  const started = useRef(false);
+  useEffect(() => {
+    if (ready && !started.current && params.get("text")) { started.current = true; run(params.get("text")!); }
+  }, [ready, params, run]);
+  useEffect(() => { if (a && params.get("focus") === "guidance") guidanceRef.current?.scrollIntoView({ behavior: "smooth" }); }, [a, params]);
+
+  return (
+    <div>
+      <PageHeader eyebrow="Message analyzer" title="Analyse one message">
+        Verdict, category, calibrated confidence and the evidence behind them. Everything is computed by the model inside this browser{engine ? ` (loaded in ${Math.round(engine.loadMs)} ms)` : ""}; the message never leaves the device.
+      </PageHeader>
+      <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_360px]">
+        <div className="min-w-0 space-y-5">
+          <Panel as="div">
+            <MessageInput text={text} setText={setText} mode={mode} setMode={setMode} onAnalyze={() => run(text, sender)} busy={busy} disabled={!ready} id="analyzer-message" />
+            <details className="mt-4 text-sm">
+              <summary className="cursor-pointer text-ink-2">Optional: sender ID (e.g. AD-BANKXX or a phone number)</summary>
+              <label className="mt-2 block text-xs text-ink-3" htmlFor="sender">Used only for sender checks; it does not change the model's verdict.</label>
+              <input id="sender" value={sender} onChange={(e) => setSender(e.target.value)} className="mt-1 w-full rounded-lg border border-line-2 bg-bg-2 px-3 py-2 text-ink" placeholder="Sender as shown in Messages" />
+            </details>
+            <ExampleChips onPick={(t) => { setText(t); run(t, sender); }} />
+            {error && <div className="mt-3"><ErrorBox message={error} /></div>}
+          </Panel>
+
+          {status === "loading" && <MarkLoader label="Loading the on-device model…" />}
+          {status === "error" && <ErrorBox message={loadError ?? "Model failed to load"} onRetry={retry} />}
+          {!a && status === "ready" && !busy && <Panel as="div"><Empty icon={<ScanSearch className="h-6 w-6" />} title="No message analysed yet">Paste a message above or pick an example.</Empty></Panel>}
+          {busy && !a && <MarkLoader label="Analysing…" />}
+
+          {a && (
+            <div className="fade-in space-y-5">
+              <Panel as="div">
+                <VerdictBanner a={a} />
+                <div className="mt-4"><ConfidenceMeter a={a} /></div>
+                <div className="mt-5"><Explanation a={a} /></div>
+                <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-4">
+                  <FamiliarityNote a={a} />
+                  <span className="text-xs text-ink-3">Language: {a.core.language} · {a.core.latency_ms.toFixed(1)} ms on this device</span>
+                </div>
+              </Panel>
+              <Panel title="Evidence heatmap" icon={<Sparkles className="h-5 w-5" />}><EvidenceHeatmap a={a} /></Panel>
+              <div className="grid gap-5 lg:grid-cols-2">
+                <Panel title="Scam DNA" icon={<Fingerprint className="h-5 w-5" />}><ScamDNA a={a} /></Panel>
+                <Panel title="Why the model decided" icon={<ListChecks className="h-5 w-5" />}>
+                  <KeyFactors a={a} />
+                  <p className="mt-3 text-xs leading-relaxed text-ink-3">{a.core.evidence_note}</p>
+                </Panel>
+              </div>
+              <Panel title="Evidence dossier" icon={<Microscope className="h-5 w-5" />} action={<Button variant="ghost" onClick={() => go("forensics", { text: a.input.text })}>Open in Forensics</Button>}>
+                <EvidenceDossier a={a} />
+                {a.core.category_probabilities && (
+                  <div className="mt-4">
+                    <div className="mb-2 text-xs font-semibold uppercase tracking-wider text-ink-3">Category probabilities</div>
+                    <div className="flex flex-wrap gap-2">
+                      {Object.entries(a.core.category_probabilities).sort((x, y) => y[1] - x[1]).map(([k, v]) => <Chip key={k} tone={k === a.core.category ? "accent" : "neutral"}>{CATEGORY_LABEL[k]} {(v * 100).toFixed(0)}%</Chip>)}
+                    </div>
+                  </div>
+                )}
+              </Panel>
+              <div ref={guidanceRef}><Panel title="What to do" icon={<ShieldCheck className="h-5 w-5" />}><GuidancePanel a={a} /></Panel></div>
+              <Panel as="div"><FeedbackBar a={a} /></Panel>
+            </div>
+          )}
+        </div>
+        <aside className="space-y-5">
+          {a && (
+            <Panel title="Export" icon={<Download className="h-5 w-5" />}>
+              <label className="flex items-center gap-2 text-sm text-ink"><input type="checkbox" checked={redactOn} onChange={(e) => setRedactOn(e.target.checked)} /> Redact phone numbers, UPI IDs, links, e-mails and long numbers</label>
+              <p className="mt-1 text-xs text-ink-3">Redaction options are set in <a className="underline" href="#/settings">Settings</a>. Files are created in your browser.</p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <Button variant="outline" onClick={() => download("tekme-report.md", exportReport(a, redactOn ? settings.redact : null), "text/markdown")}>Markdown</Button>
+                <Button variant="outline" onClick={() => download("tekme-report.json", JSON.stringify(exportJson(a, redactOn ? settings.redact : null), null, 1), "application/json")}>JSON</Button>
+              </div>
+            </Panel>
+          )}
+          {a && a.urls.length > 0 && (
+            <Panel title="Links" icon={<Info className="h-5 w-5" />}>
+              <ul className="space-y-2 text-sm">{a.urls.map((u) => <li key={u.url}><div className="break-all font-mono text-xs text-ink">{u.url}</div><div className="mt-1 flex flex-wrap gap-1">{u.indicators.slice(0, 4).map((i) => <Chip key={i.id} tone={levelTone(i.level)}>{i.label}</Chip>)}</div></li>)}</ul>
+            </Panel>
+          )}
+          <HistoryPanel onPick={(t) => { setText(t); run(t); }} />
+        </aside>
+      </div>
+    </div>
   );
 }

@@ -1,14 +1,26 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="referrer" content="no-referrer" />
+    <meta name="description" content="TEKMĒ — offline, evidence-based scam message detection. Analysis runs on your device." />
+    <meta name="theme-color" content="#150c0c" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f7f3ee" media="(prefers-color-scheme: light)" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="TEKMĒ" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>SCAMPRINT — Offline Scam Message Detector</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <title>TEKMĒ — Evidence over instinct.</title>
+    <!-- Sets the theme before first paint (external file so the CSP can forbid inline scripts). -->
+    <script src="/theme-init.js"></script>
   </head>
   <body>
     <div id="root"></div>
+    <noscript>TEKMĒ needs JavaScript: the scam detector runs inside your browser.</noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
