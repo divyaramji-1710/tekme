@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 // Hand-built SVG charts: no chart library, no remote assets. Colours come from theme tokens validated with the
-// dataviz validator (dark: #c27f42 / #4b93ea on #1f120e; light: #a85a2a / #2f6fa8 on #fffcf8).
+// dataviz validator (dark: #b8784a / #5f97d8 on #201b1a; light: #a85a2a / #2f6fa8 on #fffcf8).
 const S1 = "var(--t-series-1)";
 const S2 = "var(--t-series-2)";
 const GRID = "var(--t-line)";

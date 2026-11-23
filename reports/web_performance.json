@@ -1,12 +1,12 @@
 {
  "runtime": "Node v24.15.0 (V8)",
- "model_parse_and_index_ms": 354.5,
+ "model_parse_and_index_ms": 206.1,
  "full_predict_ms": {
-  "p50": 8.72,
-  "p95": 19.81,
-  "max": 53.82
+  "p50": 5.66,
+  "p95": 13.11,
+  "max": 29.47
  },
- "batch_predict_ms_per_message": 5.29,
- "heap_used_mb_after_load": 74,
+ "batch_predict_ms_per_message": 3.65,
+ "heap_used_mb_after_load": 71,
  "note": "Measured on the developer laptop; numbers vary with power state (KNOWN_ISSUES K14)."
 }

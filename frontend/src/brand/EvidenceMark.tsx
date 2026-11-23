@@ -3,7 +3,7 @@
 
 type Variant = "auto" | "dark" | "light" | "mono";
 const COLORS: Record<Exclude<Variant, "auto" | "mono">, { mark: string; dot: string; hole: string }> = {
-  dark: { mark: "#d39858", dot: "#eaceaa", hole: "#150c0c" },
+  dark: { mark: "#a78a78", dot: "#f0e8e1", hole: "#111010" },
   light: { mark: "#85431e", dot: "#34150f", hole: "#f7f3ee" },
 };
 

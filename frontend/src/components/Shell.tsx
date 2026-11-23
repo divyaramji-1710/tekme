@@ -108,7 +108,7 @@ export function SidebarLinks({ route }: { route: Route }) {
           <li key={label}>
             <a href={`#/${r}`} aria-current={active ? "page" : undefined}
               className={`flex items-center gap-3 whitespace-nowrap rounded-[10px] px-3 py-[0.6rem] text-[0.9rem] transition-colors ${active
-                ? "bg-gradient-to-r from-[#c47a3a] to-[#d99a5c] font-semibold text-[#fffaf3] shadow-[0_6px_16px_-8px_#c0844a] dark:from-[#b8763f] dark:to-[#d39858] dark:text-[#1d0f0a]"
+                ? "bg-gradient-to-r from-[#c47a3a] to-[#d99a5c] font-semibold text-[#fffaf3] shadow-[0_6px_16px_-8px_#c0844a] dark:bg-none dark:bg-[var(--t-active)] dark:text-[var(--t-active-ink)] dark:shadow-none dark:ring-1 dark:ring-inset dark:ring-[#4d3f39]"
                 : "text-ink hover:bg-surface-2"}`}>
               <Icon className={`h-[1.15rem] w-[1.15rem] shrink-0 ${active ? "" : "text-ink-2"}`} strokeWidth={1.7} aria-hidden />
               {label}
