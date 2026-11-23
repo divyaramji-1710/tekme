@@ -36,7 +36,7 @@ export function BarList({ data, max = 1, format = (v: number) => v.toFixed(3), a
           <span className="flex items-center gap-1.5"><span className="h-2.5 w-4 rounded-sm" style={{ background: S2 }} />{legend[1]}</span>
         </div>
       )}
-      <svg viewBox={`0 0 ${W} ${H}`} className="w-full min-w-[480px]" role="img" aria-label={ariaLabel} onMouseLeave={() => setTip(null)}>
+      <svg viewBox={`0 0 ${W} ${H}`} className="w-full min-w-[480px] max-w-[780px]" role="img" aria-label={ariaLabel} onMouseLeave={() => setTip(null)}>
         {[0, 0.25, 0.5, 0.75, 1].map((f) => (
           <g key={f}>
             <line x1={labelW + f * plotW} x2={labelW + f * plotW} y1={0} y2={H - 18} stroke={GRID} strokeWidth={1} />

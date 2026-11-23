@@ -1,5 +1,28 @@
 # Testing report
 
+Run everything with `.	est.ps1`. Last full run: 2026-11-23, Windows 11, Python 3.12.10, Node 24.15, CPU only.
+
+## TEKMĒ (phase 2)
+| Suite | Tests | Result | Covers |
+|---|---|---|---|
+| Python (`pytest`) | 113 | pass | the 111 phase-1 tests below + 2 iOS compact-model tests (plain-arithmetic re-scoring of the exported JSON reproduces the reference; no network deferral in the extension) |
+| `frontend/tests/parity.test.ts` | 1 (5,072 messages) | pass | browser engine vs Python on every intermediate and final field (docs/PARITY.md) |
+| `frontend/tests/analysis.test.ts` | 20 | pass | Python-style rounding; URL forensics (punycode, credentials, IP, look-alike, download, "not a guarantee"); payment patterns vs genuine debit alert; brand claims never "verified"; sender formats; redaction and redacted JSON export; conversation escalation and ordinary chat; counterfactual re-scoring; CSV/text batch parsing, summary, redacted export; guidance tiers and Hinglish; unfamiliarity parity with Python; Mutation Lab determinism and URL safety |
+| `frontend/tests/behaviour.test.ts` | 15 | pass | 5 genuine messages (OTP, debit alert, delivery, chat, reminder) stay SAFE; 8 scams incl. Hinglish, obfuscated, OTP-sharing and collect-request are SCAM with expected categories; confidence = P(verdict) ≥ 0.5; SAFE ⇒ no category |
+| `frontend/tests/ui.test.tsx` | 17 | pass | every route renders with the real engine and passes axe-core (serious/critical, contrast excluded); analysis flow with a recorded `fetch` (same-origin only, no message text in any request); theme cycle and persistence; `theme-init.js` before React; skip link, landmarks, current-page markers; hash routing |
+| `frontend/tests/contrast.test.ts` | 52 | pass | WCAG AA (4.5:1) for text and status tokens in both themes; chart series ≥ 3:1 |
+| `frontend/tests/perf.test.ts` | 1 | pass | writes reports/web_performance.json (V8: 5.6 ms median / 11.2 ms p95 per full analysis, 160 ms model index load, 4.2 ms/message batch) |
+| `npm run build` + `npm run check:offline` | — | pass | strict TypeScript; no remote hosts referenced anywhere in the build (70 files) |
+
+Found and fixed during this phase: Python/JS rounding difference (parity), raw ` ` inside a regex literal,
+`NaN` in exported JSON blanking a page (now sanitised + an error boundary), confusion-matrix shape mismatch,
+pandas missing categories exported as `NaN`, test-split texts in a shipped file (moved out), wrong scoring of iOS
+fixtures (raw instead of compacted text).
+
+Not verified here: Swift compilation and XCTests (need a Mac), installation on an iPhone, physical Wi-Fi-off run.
+
+## Phase 1 (SCAMPRINT)
+
 Run everything with `.\test.ps1` (pytest + frontend offline-asset scan). Last run: 2026-11-23, Windows 11,
 Python 3.12.10, CPU only. **Result: 111 passed, 0 failed, 0 skipped**; `npm run check:offline` OK.
 

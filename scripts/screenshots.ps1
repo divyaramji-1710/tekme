@@ -1,28 +1,14 @@
-# Capture real screenshots of the running app with headless Microsoft Edge (no extra downloads).
-# Start the app first (.\run.ps1), then run: .\scripts\screenshots.ps1
+# Capture the TEKMĒ screenshot set from the running app (start .\run.ps1 first). Uses scripts\shot.ps1.
 $ErrorActionPreference = "Stop"
 Set-Location (Split-Path $PSScriptRoot -Parent)
-$edge = "${env:ProgramFiles(x86)}\Microsoft\Edge\Application\msedge.exe"
-if (-not (Test-Path $edge)) { $edge = "$env:ProgramFiles\Microsoft\Edge\Application\msedge.exe" }
-$base = "http://127.0.0.1:8000/"
-$enc = { param($s) [uri]::EscapeDataString($s) }
+$b = "http://127.0.0.1:8000"
+$kyc = [uri]::EscapeDataString("Dear SBI customer, your KYC has expired and your account will be blocked within 24 hours. Update immediately: http://sbi-kyc-verify.example/login")
 $shots = [ordered]@{
-  "01_analyzer_empty"   = "#analyzer"
-  "02_scam_kyc"         = "#analyzer?text=" + (& $enc "Dear SBI customer, your KYC has expired and your account will be blocked within 24 hours. Update immediately: http://sbi-kyc-verify.example/login")
-  "03_genuine_otp"      = "#analyzer?text=" + (& $enc "483921 is your OTP for login to NetBanking. Valid for 5 minutes. Do not share this OTP with anyone. Bank staff will never ask for it.")
-  "04_hinglish_scam"    = "#analyzer?text=" + (& $enc "Aapka SBI khata aaj band ho jayega. Turant KYC update karein warna account block: http://kyc-update.example/sbi")
-  "05_mutation_lab"     = "#lab?expected=SCAM&run=1&text=" + (& $enc "Update your KYC immediately or your account will be blocked today. Click http://kyc-verify.example/login")
-  "06_diagnostics"      = "#diagnostics"
-  "07_privacy"          = "#privacy"
-  "08_about"            = "#about"
+  "01_home_dark" = @("$b/?theme=dark#/", 1400); "02_home_light" = @("$b/?theme=light#/", 1400)
+  "03_analyzer_scam_dark" = @("$b/?theme=dark#/analyze?text=$kyc", 2300); "06_forensics_light" = @("$b/?theme=light#/forensics?text=$kyc", 2000)
+  "07_conversation_dark" = @("$b/?theme=dark#/conversation", 1900); "08_adversarial_lab_light" = @("$b/?theme=light#/lab", 2600)
+  "09_model_intelligence_dark" = @("$b/?theme=dark#/model", 3800); "10_threat_library_light" = @("$b/?theme=light#/library", 1500)
+  "11_privacy_dark" = @("$b/?theme=dark#/privacy", 1900); "12_iphone_light" = @("$b/?theme=light#/iphone", 1500); "13_settings_dark" = @("$b/?theme=dark#/settings", 1700)
 }
-$profileDir = Join-Path $env:TEMP "scamprint-edge-profile"
-foreach ($k in $shots.Keys) {
-  $out = Join-Path (Resolve-Path docs\screenshots) "$k.png"
-  $args = @("--headless=new", "--disable-gpu", "--no-first-run", "--user-data-dir=`"$profileDir`"", "--hide-scrollbars",
-            "--window-size=1440,2200", "--virtual-time-budget=8000", "--screenshot=`"$out`"", "`"$($base + $shots[$k])`"")
-  $p = Start-Process -FilePath $edge -ArgumentList $args -PassThru -WindowStyle Hidden -RedirectStandardError (Join-Path $env:TEMP "scamprint-edge.log")
-  if (-not $p.WaitForExit(45000)) { Stop-Process -Id $p.Id -Force; Write-Warning "timed out: $k" }
-  Start-Sleep -Milliseconds 500
-  Write-Host "saved $out"
-}
+foreach ($k in $shots.Keys) { & .\scripts\shot.ps1 -Url $shots[$k][0] -Out "docs\screenshots\$k.png" -Height $shots[$k][1] }
+# Phone-width captures (390 px) need a server without frame-ancestors; see docs/TESTING.md.

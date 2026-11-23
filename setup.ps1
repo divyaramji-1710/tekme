@@ -1,6 +1,6 @@
-# SCAMPRINT one-time setup (needs internet ONCE for packages and public datasets).
+# TEKMĒ one-time setup (needs internet ONCE for packages and public datasets).
 # Usage:  .\setup.ps1            install deps + build UI (uses the trained model in ml\artifacts)
-#         .\setup.ps1 -Train     also download data and retrain all models (~10 min on CPU)
+#         .\setup.ps1 -Train     also download data and retrain all models (~20 min on CPU, incl. browser export and parity check)
 param([switch]$Train)
 $ErrorActionPreference = "Stop"
 Set-Location $PSScriptRoot

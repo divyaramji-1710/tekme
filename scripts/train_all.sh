@@ -5,3 +5,4 @@ cd "$(dirname "$0")/.."
 PY=${PY:-.venv/bin/python}
 export PYTHONIOENCODING=utf-8
 $PY scripts/download_data.py && $PY ml/datasets/prepare.py && $PY ml/datasets/augment.py && $PY ml/training/train.py && $PY ml/evaluation/evaluate.py
+$PY -m ml.analysis.build_intel && $PY -m ml.export.ios_model && $PY -m ml.export.parity && $PY -m ml.export.export_web && (cd frontend && npx vitest run tests/parity.test.ts) && $PY -m ml.export.export_web

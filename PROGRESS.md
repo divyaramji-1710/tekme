@@ -1,15 +1,26 @@
 # Progress
 
-**Current phase:** TEKMĒ phase 2 — Checkpoint T1 (repository audit) PASS; waiting on user decisions before T2.
+**Current phase:** TEKMĒ phase 2 complete (T1–T20); T13/T14 physical checks and iOS build need the user.
 **Last updated:** 2026-11-23
 
-## TEKMĒ phase 2
-* T1 audit done: see `FEATURE_MATRIX.md` (core detection Done; features 5, 6, 7, 10, 11, 12, 14 Partial; the
-  other 13 Missing; Athena hero and iOS build Blocked). Mockups stored in `docs/design/` as design references only.
-* Baseline: 110/111 tests passed on battery power; the latency test failed once and passed on rerun (K14).
-  `npm run build` and the offline-asset scan pass.
-* **Next action:** get answers on (1) the Athena artwork asset, (2) in-browser inference scope for the PWA;
-  then T2 architecture (shared analysis contract, uncertainty band, new endpoints) and T3 branding.
+## TEKMĒ phase 2 — done
+* Browser engine (TypeScript port, auto-translated regexes, float32 model 6.6 MB) with parity on 5,072 messages.
+* Analysis layer + 12 pages in both themes matching the mockups; PWA; Evidence Mark; Athena hero.
+* Intelligence artefacts (families, unfamiliarity, source comparison); compact iOS model + Swift sources.
+* Tests: pytest 113, vitest 106, build + offline scan. Docs complete (see README).
+
+## Needs the user
+1. Physical offline run (docs/OFFLINE_VERIFICATION.md C) → record in CHECKPOINTS T13.
+2. iPhone PWA: choose HTTPS hosting (public deployment needs approval/account) — K19.
+3. iOS native: build on a Mac (docs/IOS_GUIDE.md) — K18.
+4. Optional: plug-in re-measurement of Python latency (K14).
+
+## Resume commands
+```powershell
+.	est.ps1                                   # everything
+python -m ml.export.export_web               # after any rule/model change, then:
+cd frontend; npx vitest run tests/parity.test.ts; npm run build
+```
 
 ## Phase 1 — SCAMPRINT prototype (complete)
 Checkpoints 0–19 done; Checkpoint 14 PARTIAL only because the physical Wi-Fi-off demonstration needs the user.

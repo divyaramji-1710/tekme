@@ -1,0 +1,66 @@
+{
+ "model": "compact word 1-2 gram TF-IDF + logistic regression + Platt",
+ "C": 8,
+ "n_features": 6000,
+ "junk_threshold": 0.89,
+ "threshold_rule": "lowest threshold with validation FPR <= 1%",
+ "at_junk_threshold": {
+  "va": {
+   "n": 3093,
+   "accuracy": 0.881,
+   "precision": 0.9861,
+   "recall": 0.7514,
+   "f1": 0.8529,
+   "false_positive_rate": 0.009,
+   "roc_auc": 0.9795
+  },
+  "te": {
+   "n": 3138,
+   "accuracy": 0.8942,
+   "precision": 0.9787,
+   "recall": 0.7889,
+   "f1": 0.8736,
+   "false_positive_rate": 0.0148,
+   "roc_auc": 0.9817
+  },
+  "tb": {
+   "n": 400,
+   "accuracy": 0.77,
+   "precision": 0.9421,
+   "recall": 0.5729,
+   "f1": 0.7125,
+   "false_positive_rate": 0.0348,
+   "roc_auc": 0.9373
+  },
+  "adv": {
+   "n": 11000,
+   "accuracy": 0.8384,
+   "precision": 0.9879,
+   "recall": 0.6851,
+   "f1": 0.8091,
+   "false_positive_rate": 0.0084,
+   "roc_auc": 0.9732
+  }
+ },
+ "at_0.5": {
+  "te": {
+   "n": 3138,
+   "accuracy": 0.9363,
+   "precision": 0.9318,
+   "recall": 0.9305,
+   "f1": 0.9312,
+   "false_positive_rate": 0.0588,
+   "roc_auc": 0.9817
+  },
+  "tb": {
+   "n": 400,
+   "accuracy": 0.8625,
+   "precision": 0.8789,
+   "recall": 0.8392,
+   "f1": 0.8586,
+   "false_positive_rate": 0.1144,
+   "roc_auc": 0.9373
+  }
+ },
+ "note": "Measured in Python with the reference implementation. The Swift port has NOT been compiled or run."
+}

@@ -1,5 +1,15 @@
 # Privacy design and verification
 
+## TEKMĒ: where analysis runs
+Since TEKMĒ 2.0 every user-facing analysis runs **in the browser** (the exported model is loaded once, its SHA-256
+is checked, and predictions run in memory). No message, URL, UPI ID or other input is sent to any server — not even
+the local Python process that may serve the page. Local data: settings (no message text), optional history (off by
+default, retention 1/7/30 days), feedback; all deletable in the Privacy Center. Exports can redact phone numbers, UPI
+IDs, links, e-mails, codes and amounts. The service worker caches only the app and the model and never caches
+`/api`. Verification steps: [OFFLINE_VERIFICATION.md](OFFLINE_VERIFICATION.md). The guarantees below for the Python
+API still hold.
+
+
 ## Guarantees the design aims for
 
 1. **Local inference.** All models (`ml/artifacts/scamprint_bundle.joblib`, `vocab.txt`) and reference data

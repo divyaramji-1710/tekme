@@ -1,0 +1,206 @@
+[
+ {
+  "text": "Dear SBI customer, your KYC has expired and your account will be blocked within 24 hours. Update immediately: http://sbi-kyc-verify.example/login",
+  "compact_text": "dear sbi customer your kyc has expired and your account will be blocked within 24 hours update immediately xurlx zzurgent zzblock",
+  "probability": 0.999024,
+  "junk": true
+ },
+ {
+  "text": "483921 is your OTP for login to NetBanking. Valid for 5 minutes. Do not share this OTP with anyone. Bank staff will never ask for it.",
+  "compact_text": "xnumx is your otp for login to netbanking valid for 5 minutes do not share this otp with anyone bank staff will never ask for it zzotpcode zzsharecode zznevershare",
+  "probability": 0.000554,
+  "junk": false
+ },
+ {
+  "text": "Your account will be suspended today. To stop this, send the OTP 483921 you just received to our agent at 9876543210.",
+  "compact_text": "your account will be suspended today to stop this send the otp xnumx you just received to our agent at xphonex zzotpcode zzsharecode zzurgent zzblock",
+  "probability": 0.999141,
+  "junk": true
+ },
+ {
+  "text": "Rs.2,450.00 debited from A/c XX4821 on 21-Nov to VPA foodapp@icici. Avl Bal Rs.18,302.11. If not done by you, call the number on the back of your card.",
+  "compact_text": "rs 2 450 00 debited from a c xx xnumx on 21 nov to vpa xupix avl bal rs 18 302 11 if not done by you call the number on the back of your card",
+  "probability": 0.007062,
+  "junk": false
+ },
+ {
+  "text": "Aapka SBI khata aaj band ho jayega. Turant KYC update karein warna account block: http://kyc-update.example/sbi",
+  "compact_text": "aapka sbi khata aaj band ho jayega turant kyc update karein warna account block xurlx zzurgent zzblock",
+  "probability": 0.987049,
+  "junk": true
+ },
+ {
+  "text": "आपका बैंक खाता आज बंद हो जाएगा। तुरंत केवाईसी अपडेट करें: http://kyc-verify.example",
+  "compact_text": "आपक ब क ख त आज ब द ह ज एग त र त क व ईस अपड ट कर xurlx",
+  "probability": 0.736317,
+  "junk": false
+ },
+ {
+  "text": "Y0ur acc0unt is bl0cked. Upd8 ur K Y C n0w at bit.ly/kyc-upd8 to av0id suspensi0n!!",
+  "compact_text": "y0ur acc0unt is bl0cked upd8 ur k y c n0w at xurlx to av0id suspensi0n",
+  "probability": 0.060821,
+  "junk": false
+ },
+ {
+  "text": "Congratulations! Your number has won Rs 25,00,000 in the KBC Lucky Draw. Pay Rs 4,999 processing fee to claim your prize. WhatsApp +91 98765 43210",
+  "compact_text": "congratulations your number has won rs 25 00 000 in the kbc lucky draw pay rs 4 999 processing fee to claim your prize whatsapp xphonex zzprize zzfee",
+  "probability": 0.999889,
+  "junk": true
+ },
+ {
+  "text": "Part-time job offer! Earn Rs 3000-8000 daily by liking YouTube videos. No experience needed. Contact HR on WhatsApp: wa.me/919876543210",
+  "compact_text": "part time job offer earn rs xnumx xnumx daily by liking youtube videos no experience needed contact hr on whatsapp xurlx",
+  "probability": 0.981175,
+  "junk": true
+ },
+ {
+  "text": "Pre-approved instant loan of Rs 5,00,000 at 0% interest! No documents, no CIBIL check. Pay Rs 1,999 file charge to get the money in 10 minutes.",
+  "compact_text": "pre approved instant loan of rs 5 00 000 at 0 interest no documents no cibil check pay rs 1 999 file charge to get the money in 10 minutes zzfee",
+  "probability": 0.268998,
+  "junk": false
+ },
+ {
+  "text": "India Post: Your parcel is held at customs. Pay Rs 49 release fee within 12 hours at http://indiapost-redelivery.example or it will be returned.",
+  "compact_text": "india post your parcel is held at customs pay rs 49 release fee within 12 hours at xurlx or it will be returned zzurgent zzfee",
+  "probability": 0.986638,
+  "junk": true
+ },
+ {
+  "text": "Your Amazon order #405-7788123 has been shipped and will be delivered tomorrow. Track it at amazon.in/your-orders",
+  "compact_text": "your amazon order 405 xnumx has been shipped and will be delivered tomorrow track it at xurlx",
+  "probability": 0.003837,
+  "junk": false
+ },
+ {
+  "text": "Hey, reached home safely. Let's meet for lunch tomorrow at 1?",
+  "compact_text": "hey reached home safely let s meet for lunch tomorrow at 1",
+  "probability": 0.009906,
+  "junk": false
+ },
+ {
+  "text": "Reminder: your appointment with Dr. Mehta is confirmed for Tue 25 Nov at 10:30 AM. Reply C to cancel.",
+  "compact_text": "reminder your appointment with dr mehta is confirmed for tue 25 nov at 10 30 am reply c to cancel",
+  "probability": 0.000732,
+  "junk": false
+ },
+ {
+  "text": "🎉🎉 Congratulations!!! You WON ₹25,00,000 in KBC lucky draw 🎁 call +91 98765 43210 now",
+  "compact_text": "congratulations you won 25 00 000 in kbc lucky draw call xphonex now zzprize",
+  "probability": 0.981948,
+  "junk": true
+ },
+ {
+  "text": "Your 𝐀𝐜𝐜𝐨𝐮𝐧𝐭 will be 𝐁𝐋𝐎𝐂𝐊𝐄𝐃 today. Verify at http://sbi-kyc.example/login",
+  "compact_text": "your account will be blocked today verify at xurlx zzurgent zzblock",
+  "probability": 0.958651,
+  "junk": true
+ },
+ {
+  "text": "Dear customer, your a​c​c​o​u​n​t is blocked. Update KYC: bit.ly/x1",
+  "compact_text": "dear customer your account is blocked update kyc xurlx zzblock",
+  "probability": 0.966379,
+  "junk": true
+ },
+ {
+  "text": "आपका खाता बंद हो जाएगा। तुरंत KYC अपडेट करें लिंक पर क्लिक करें",
+  "compact_text": "आपक ख त ब द ह ज एग त र त kyc अपड ट कर ल क पर क ल क कर",
+  "probability": 0.945741,
+  "junk": true
+ },
+ {
+  "text": "Aapka khata band ho jayega turant KYC update karein warna jurmana lagega",
+  "compact_text": "aapka khata band ho jayega turant kyc update karein warna jurmana lagega zzurgent zzblock",
+  "probability": 0.979598,
+  "junk": true
+ },
+ {
+  "text": "K Y C pending!! v.e.r.i.f.y now at hxxp://secure-update[.]example/kyc",
+  "compact_text": "k y c pending v e r i f y now at xurlx",
+  "probability": 0.40841,
+  "junk": false
+ },
+ {
+  "text": "Ваш аккаунт заблокирован",
+  "compact_text": "baш aккayнт зaблoкиpoвaн",
+  "probability": 0.034251,
+  "junk": false
+ },
+ {
+  "text": "Your OTP is 482913. Do not share it with anyone. -HDFC Bank",
+  "compact_text": "your otp is xnumx do not share it with anyone hdfc bank zzotpcode zznevershare",
+  "probability": 0.020637,
+  "junk": false
+ },
+ {
+  "text": "482913 is your OTP for login. Share it with our agent to stop blocking.",
+  "compact_text": "xnumx is your otp for login share it with our agent to stop blocking zzotpcode zzsharecode",
+  "probability": 0.471851,
+  "junk": false
+ },
+ {
+  "text": "ok",
+  "compact_text": "ok",
+  "probability": 0.000192,
+  "junk": false
+ },
+ {
+  "text": "   ",
+  "compact_text": "",
+  "probability": 0.034251,
+  "junk": false
+ },
+ {
+  "text": "🙂🙂🙂",
+  "compact_text": "",
+  "probability": 0.034251,
+  "junk": false
+ },
+ {
+  "text": "Hi mom this is my new number, I lost my phone. Can you send 5000 urgently? Don't tell dad",
+  "compact_text": "hi mom this is my new number i lost my phone can you send xnumx urgently don t tell dad zzurgent",
+  "probability": 0.986773,
+  "junk": true
+ },
+ {
+  "text": "Rs.2,500.00 debited from A/c XX1234 on 12-03-24 to VPA abc@okaxis. Avl Bal Rs 10,234. Not you? Call 1800-123-4567",
+  "compact_text": "rs 2 500 00 debited from a c xx xnumx on 12 03 24 to vpa xupix avl bal rs 10 234 not you call xphonex",
+  "probability": 0.008001,
+  "junk": false
+ },
+ {
+  "text": "Earn 5000 per day!!! Part time job, like YouTube videos. WhatsApp wa.me/911234567890",
+  "compact_text": "earn xnumx per day part time job like youtube videos whatsapp xurlx",
+  "probability": 0.98269,
+  "junk": true
+ },
+ {
+  "text": "Your parcel is out for delivery today. Track: https://www.indiapost.gov.in",
+  "compact_text": "your parcel is out for delivery today track xurlx zzurgent",
+  "probability": 0.025985,
+  "junk": false
+ },
+ {
+  "text": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+  "compact_text": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+  "probability": 0.034251,
+  "junk": false
+ },
+ {
+  "text": "ＦＲＥＥ ｇｉｆｔ ｃａｒｄ ｃｌａｉｍ ｎｏｗ",
+  "compact_text": "free gift card claim now",
+  "probability": 0.997613,
+  "junk": true
+ },
+ {
+  "text": "Pay ₹10 processing fee to claim your loan of 5 lakh. UPI: loanhelp@ybl",
+  "compact_text": "pay 10 processing fee to claim your loan of 5 lakh upi xupix zzfee",
+  "probability": 0.997157,
+  "junk": true
+ },
+ {
+  "text": "Line one\nLine two with link www.example.com/path?x=1\n\nLine four",
+  "compact_text": "line one line two with link xurlx line four",
+  "probability": 0.535278,
+  "junk": false
+ }
+]

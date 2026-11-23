@@ -4,26 +4,26 @@
 
 | # | Phase | Status | Verified by |
 |---|---|---|---|
-| T1 | Repository audit | PASS | 111 tests collected; full run 110 passed, 1 failed (latency, power-state; rerun passed, K14); `npm run build` OK; offline scan OK; audit in `FEATURE_MATRIX.md` |
-| T2 | Architecture | pending | |
-| T3 | TEKMĒ branding | pending | |
-| T4 | Dark and light themes | pending | |
-| T5 | Website redesign + Athena hero | BLOCKED (artwork) | needs a separate Athena asset; layout work can proceed |
-| T6 | Core detection engine | pending | |
-| T7 | Scam DNA and evidence | pending | |
-| T8 | URL, UPI, impersonation | pending | |
-| T9 | Conversation intelligence | pending | |
-| T10 | Adversarial features | pending | |
-| T11 | Model intelligence | pending | |
-| T12 | Batch and threat library | pending | |
-| T13 | Privacy and accessibility | pending | |
-| T14 | PWA | pending | |
-| T15 | Native iOS source | pending | |
-| T16 | iOS feasibility validation | pending | cannot build on Windows |
-| T17 | Integration testing | pending | |
-| T18 | Final polish | pending | |
-| T19 | Documentation | pending | |
-| T20 | Final demonstration | pending | |
+| T1 | Repository audit | PASS | baseline 110/111 (latency on battery, K14); FEATURE_MATRIX created |
+| T2 | Architecture | PASS | D19–D30; browser engine + analysis contract (`analysis/analyze.ts`) |
+| T3 | TEKMĒ branding | PASS | Evidence Mark SVG/PNG icons/loader; OFL fonts bundled; tokens |
+| T4 | Dark and light themes | PASS | UI tests (cycle, persistence, no-flash script); contrast test 52/52 |
+| T5 | Website redesign + Athena hero | PASS | screenshots compared with both mockups; responsive 390 px captures |
+| T6 | Core detection engine | PASS | parity 5,072/5,072 verdicts & categories; behaviour tests 15/15 |
+| T7 | Scam DNA and evidence | PASS | heatmap, Scam DNA, dossier, key factors, guidance (EN/Hinglish) |
+| T8 | URL, UPI, impersonation | PASS | forensics tests |
+| T9 | Conversation intelligence | PASS | escalation tests |
+| T10 | Adversarial features | PASS | Mutation Lab port, counterfactual re-scoring test, robustness dashboard |
+| T11 | Model intelligence | PASS | arena, calibration, families, unfamiliarity (measured), source comparison, perf, parity |
+| T12 | Batch and threat library | PASS | batch tests; library page renders (UI test) |
+| T13 | Privacy and accessibility | PASS (automated) / physical offline run needs user | UI fetch recorder, build scan, axe all pages |
+| T14 | PWA | PASS desktop / iPhone needs HTTPS hosting (user) | sw.js precache; Privacy Center shows SW state |
+| T15 | Native iOS source | PASS (source written) | `ios/` |
+| T16 | iOS feasibility validation | PARTIAL | exported model math verified in Python; Swift never compiled (no Mac) — documented |
+| T17 | Integration testing | PASS | pytest 113 passed; vitest 106 passed; build + offline scan OK |
+| T18 | Final polish | PASS | error boundary, NaN-safe reports, mockup alignment fixes |
+| T19 | Documentation | PASS | README, ARCHITECTURE, SETUP_WINDOWS, MODEL_TRAINING, PARITY, PRIVACY, OFFLINE_VERIFICATION, IOS_GUIDE, TESTING, DEMO_SCRIPT, TROUBLESHOOTING |
+| T20 | Final demonstration | PASS | DEMO_SCRIPT walkthrough uses live outputs; 15 real screenshots |
 
 ## Phase 1 — SCAMPRINT prototype (complete)
 

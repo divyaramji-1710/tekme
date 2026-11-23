@@ -1,4 +1,8 @@
-# Model card — SCAMPRINT 1.0
+# Model card — TEKMĒ (model scamprint-1.0)
+
+> TEKMĒ 2.0 runs this same model in the browser (float32 weights; parity on 5,072 messages: identical verdicts,
+> categories and explanations, max probability difference 3.6e-6). A separate, weaker **compact model** exists for
+> the unverified iOS filter extension — see docs/IOS_GUIDE.md and reports/ios_compact_report.json.
 
 | | |
 |---|---|

@@ -1,4 +1,23 @@
-# SCAMPRINT — Technical Report
+# TEKMĒ (formerly SCAMPRINT) — Technical Report
+
+> **TEKMĒ 2.0 addendum (November 2026).** The product was renamed TEKMĒ and redesigned; the model below is
+> unchanged. New in 2.0, each documented and tested:
+> * **On-device browser engine** — the trained bundle is exported (`ml/export/export_web.py`, float32 weights,
+>   6.6 MB / 3.5 MB gzip) and run by a TypeScript port of the whole pipeline; Python regexes are translated
+>   automatically. Parity on 5,072 messages: identical verdicts, categories, tactics, signals, explanations and
+>   highlights; max probability difference 3.6e-6 (docs/PARITY.md). V8 latency 5.6 ms median / 11.2 ms p95.
+> * **Analysis layer** — offline link/payment/brand/sender forensics, deterministic EN/Hinglish guidance and
+>   explanations, conversation escalation, counterfactual sensitivity, batch scanning with redacted export, local
+>   threat library, privacy audit, local feedback (no silent retraining), accessibility settings, installable PWA.
+> * **Model intelligence** — k-means scam families on the training split; an unfamiliarity flag (val 5th
+>   percentile) that detects shift (10% of test vs 19% of Test B flagged) but barely predicts errors (94.3% vs
+>   95.1% accuracy), so it is only a caveat (DECISIONS D24); cross-source tactic comparison (not a timeline).
+> * **iOS** — SwiftUI app + IdentityLookup Message Filter extension + compact model (test recall 78.9%, FPR 1.5%;
+>   Test B recall 57.3%, FPR 3.5% at a junk threshold chosen for ≤1% validation FPR). **Never compiled or
+>   installed** (no Mac).
+> * Tests: 113 Python + 106 frontend, all passing; build-time scan finds no remote references.
+> The original report follows unchanged.
+
 
 **An Explainable, Privacy-First, Adversarially Robust On-Device Scam Message Detector**
 Divya Ramji (USN 1MS24CI044) · Tinyverse Problem Statement 01 · November 2026
