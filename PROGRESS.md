@@ -29,7 +29,7 @@ Checkpoints 0–19 done; Checkpoint 14 PARTIAL only because the physical Wi-Fi-o
 * Data pipeline: download (pinned + SHA-256) → prepare (25,421 rows, group-aware split, leakage audit) → augment
   (3,760 train-only rows; 11,000-row adversarial set) → train (~5.5 min) → evaluate (~4 min).
 * Models: semantic LR, transactional specialist, calibrated fusion (47 features, isotonic), category LR, five
-  ablation variants, all in `ml/artifacts/scamprint_bundle.joblib` (7.9 MB).
+  ablation variants, all in `ml/artifacts/tekme_bundle.joblib` (7.9 MB).
 * Test results: acc 0.950, F1 0.946, FPR 0.039, AUC 0.988, ECE 0.007; Test B acc 0.885; adversarial acc 0.947.
 * Backend: FastAPI with every requested endpoint, under `/` and `/api`; network guard; no message logging.
 * Frontend: Analyzer, Scam DNA, Mutation Lab, Model Diagnostics, Privacy Center, About; served by the backend.

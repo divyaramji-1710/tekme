@@ -1,4 +1,4 @@
-"""TEKMĒ (formerly SCAMPRINT) FastAPI application — optional local API and static host for the UI.
+"""TEKMĒ FastAPI application — optional local API and static host for the UI.
 
 Run:  python -m backend.main          (binds 127.0.0.1:8000)
 
@@ -19,7 +19,7 @@ from fastapi.staticfiles import StaticFiles
 from backend.core import config, privacy
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
-log = logging.getLogger("scamprint")
+log = logging.getLogger("tekme")
 
 
 @asynccontextmanager
@@ -29,8 +29,8 @@ async def lifespan(app: FastAPI):
     app.state.model = None
     app.state.load_error = None
     try:
-        from backend.services.inference import ScamPrint
-        app.state.model = ScamPrint.load(config.MODEL_BUNDLE)
+        from backend.services.inference import TekmeModel
+        app.state.model = TekmeModel.load(config.MODEL_BUNDLE)
         log.info("model loaded in %.2fs from %s", app.state.model.load_seconds, config.MODEL_BUNDLE.name)
     except FileNotFoundError:
         app.state.load_error = "model bundle not found - run scripts/train_all.ps1"

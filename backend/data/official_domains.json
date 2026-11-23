@@ -1,7 +1,7 @@
 {
   "_meta": {
     "description": "Primary public web domains of organisations frequently impersonated in Indian SMS scams. Used OFFLINE for look-alike and claimed-brand/domain mismatch checks.",
-    "source": "Manually compiled by the SCAMPRINT developer from the organisations' commonly known public websites (Nov 2026). Includes the RBI-mandated '.bank.in' domains. Not exhaustive and not verified against a registry.",
+    "source": "Manually compiled by the TEKMĒ developer from the organisations' commonly known public websites (Nov 2026). Includes the RBI-mandated '.bank.in' domains. Not exhaustive and not verified against a registry.",
     "limitations": "A domain missing from this list is NOT evidence of fraud and a listed domain is NOT a guarantee of safety (compromised sites, open redirects). Brand matching is keyword based.",
     "update_process": "Edit this file by hand and restart the backend. The application never downloads domain lists."
   },

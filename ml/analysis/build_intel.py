@@ -113,8 +113,8 @@ def main() -> int:
     th_cov = float(np.quantile(cov_va, 0.05))
 
     # Measure (not tune) on held-out sets, using the model's own predictions.
-    from backend.services.inference import ScamPrint
-    model = ScamPrint.load()
+    from backend.services.inference import TekmeModel
+    model = TekmeModel.load()
 
     def measure(df, ps, name):
         s, _ = similarity(vectors(vec, mt(ps)), cents)

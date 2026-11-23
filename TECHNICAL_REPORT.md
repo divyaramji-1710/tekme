@@ -23,7 +23,7 @@
 Divya Ramji (USN 1MS24CI044) · Tinyverse Problem Statement 01 · November 2026
 
 ## 1. Abstract
-SCAMPRINT classifies a single SMS/WhatsApp message as SCAM or SAFE, assigns one of five scam categories, and
+TEKMĒ classifies a single SMS/WhatsApp message as SCAM or SAFE, assigns one of five scam categories, and
 reports a calibrated confidence with human-readable evidence, entirely offline on a laptop CPU. It combines a
 character/word TF-IDF semantic model with three rule engines (manipulation tactics, structural trust signals and
 genuine-message protection) through a calibrated, stacked logistic-regression fusion layer. On an untouched,

@@ -1,9 +1,9 @@
 {
  "format": "tekme-web-model/1",
- "source_bundle_sha256": "951243d763fdcc762bd911872239bb9062501362163a2ae21b2544747d00ff44",
+ "source_bundle_sha256": "39b9697799455741bd3d3ffd9e52094aaaa5651b51dec38c6e773cd2a403280e",
  "model_bin_sha256": "9fccadbf911bf51628b7394011d845d88154a473f8d3c6b984f8bc686603cdeb",
  "model_bin_bytes": 6628233,
- "model_version": "scamprint-1.0",
+ "model_version": "tekme-1.0",
  "trained_at": "2026-11-22T21:43:04+00:00",
  "strings": {
   "offset": 5508776,

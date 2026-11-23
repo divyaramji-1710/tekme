@@ -59,4 +59,4 @@ Performed against `python -m backend.main` on 127.0.0.1:8000 serving the product
 ## Browser console
 Headless Edge with `--enable-logging=stderr` on all five pages (Analyzer with a deep-linked prediction, Mutation
 Lab auto-run, Diagnostics, Privacy, About): **0 console messages from the app**, no uncaught errors, no failed
-loads. The single logged line came from a built-in Edge extension (`chrome-extension://…`), not SCAMPRINT.
+loads. The single logged line came from a built-in Edge extension (`chrome-extension://…`), not TEKMĒ.

@@ -20,7 +20,7 @@ import pandas as pd
 from backend.core.config import BACKEND_DATA, ROOT
 from backend.engines.categorizer import category_text
 from backend.engines import semantic
-from backend.services.inference import ScamPrint
+from backend.services.inference import TekmeModel
 
 OUT = ROOT / "ml" / "artifacts" / "parity"
 DATA = ROOT / "ml" / "datasets" / "processed"
@@ -57,7 +57,7 @@ def _spans(text: str, spans: list[dict]) -> list[list[int]]:
     return [[_u16(text, s["start"]), _u16(text, s["end"])] for s in spans]
 
 
-def reference(model: ScamPrint, text: str) -> dict:
+def reference(model: TekmeModel, text: str) -> dict:
     p, outs, rows = model.scam_probability([text])
     o, row, pi = outs[0], rows[0], float(p[0])
     full = model.predict(text)
@@ -105,7 +105,7 @@ def corpus() -> list[tuple[str, str]]:
 
 
 def main() -> int:
-    model = ScamPrint.load()
+    model = TekmeModel.load()
     OUT.mkdir(parents=True, exist_ok=True)
     items = corpus()
     with (OUT / "corpus.jsonl").open("w", encoding="utf-8") as f:

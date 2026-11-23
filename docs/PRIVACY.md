@@ -12,16 +12,16 @@ API still hold.
 
 ## Guarantees the design aims for
 
-1. **Local inference.** All models (`ml/artifacts/scamprint_bundle.joblib`, `vocab.txt`) and reference data
+1. **Local inference.** All models (`ml/artifacts/tekme_bundle.joblib`, `vocab.txt`) and reference data
    (`backend/data/official_domains.json`) are files on disk, loaded once at startup.
 2. **No outbound traffic.** The backend never imports an HTTP client; links in messages are analysed as text
    and never visited, resolved, or checked against WHOIS or reputation services.
 3. **Enforced, not just promised.** At startup `backend/core/privacy.py` patches `socket.connect` /
    `connect_ex` so the backend process *cannot* connect to any non-loopback address; attempts are counted
-   and shown in the Privacy Center (`SCAMPRINT_NETWORK_GUARD=0` disables it, for debugging only).
+   and shown in the Privacy Center (`TEKME_NETWORK_GUARD=0` disables it, for debugging only).
 4. **Loopback only.** Uvicorn binds to `127.0.0.1`; CORS allows only the local dev/preview origins.
 5. **No retention.** Messages are processed in memory and discarded. Logs contain endpoint, message
-   *length* and latency only (`SCAMPRINT_LOG_MESSAGES=1` opts in to content logging, off by default).
+   *length* and latency only (`TEKME_LOG_MESSAGES=1` opts in to content logging, off by default).
    Validation errors never echo the submitted text.
 6. **No third-party assets.** The UI uses system fonts and hand-drawn SVG charts; the production build is
    scanned by `npm run check:offline`. A Content-Security-Policy header restricts scripts/styles to `'self'`.

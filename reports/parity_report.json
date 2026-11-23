@@ -2,7 +2,7 @@
  "generated_by": "frontend/tests/parity.test.ts",
  "corpus": "ml/artifacts/parity/corpus.jsonl (built by python -m ml.export.parity)",
  "n_messages": 5072,
- "seconds": 58.4,
+ "seconds": 90.8,
  "agreement": {
   "normalized": 1,
   "model_text": 1,

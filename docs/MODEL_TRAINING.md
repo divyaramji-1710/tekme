@@ -8,7 +8,7 @@ All steps run on CPU and are reproducible from pinned public data (`scripts/down
 | Download | `python scripts\download_data.py` | `ml/datasets/raw/*` (pinned revisions) |
 | Prepare | `python ml\datasets\prepare.py` | `processed/dataset.parquet` — 25,421 rows, near-duplicate-group split train/val/test, leakage audit, `reports/dataset_report.md` |
 | Augment | `python ml\datasets\augment.py` | 3,760 train-only augmented rows; 11,000-row adversarial test set |
-| Train | `python ml\training\train.py` | `ml/artifacts/scamprint_bundle.joblib` (semantic LR, specialist, fusion + 5 ablations, isotonic calibration, category model) |
+| Train | `python ml\training\train.py` | `ml/artifacts/tekme_bundle.joblib` (semantic LR, specialist, fusion + 5 ablations, isotonic calibration, category model) |
 | Evaluate | `python ml\evaluation\evaluate.py` | `reports/metrics.json`, `evaluation_report.md`, `error_analysis.md`, figures |
 | Intelligence | `python -m ml.analysis.build_intel` | `frontend/public/model/intel.json` (k-means families on train, unfamiliarity thresholds from val, measured on test/Test B/adversarial), `reports/intel_report.json` |
 | iOS compact model | `python -m ml.export.ios_model` | `ios/Shared/tekme_compact.json`, fixtures, `reports/ios_compact_report.json` |

@@ -1,4 +1,4 @@
-"""Train every SCAMPRINT model and save a single local bundle.
+"""Train every TEKMĒ model and save a single local bundle.
 
 Data discipline
 ---------------
@@ -244,7 +244,7 @@ def main() -> None:
     # ---------------------------------------------------------- save bundle
     print("[7/7] saving bundle")
     meta = {
-        "model_version": "scamprint-1.0",
+        "model_version": "tekme-1.0",
         "trained_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         "training_seconds": round(time.perf_counter() - t_start, 1),
         "python": platform.python_version(), "sklearn": sklearn.__version__,
@@ -257,13 +257,13 @@ def main() -> None:
     }
     bundle = {"semantic": sem_full, "specialist": spec_full, "fusion": final, "ablations": fusions,
               "category": category, "threshold": threshold, "borderline_band": (0.35, 0.65), "metadata": meta}
-    joblib.dump(bundle, ART / "scamprint_bundle.joblib", compress=3)
+    joblib.dump(bundle, ART / "tekme_bundle.joblib", compress=3)
     train_report = {"metadata": meta, "semantic_selection": selection, "fusion_and_ablations": fusion_report,
                     "threshold_sweep_val": sweep, "threshold_rule": "fixed 0.5 on calibrated probability (verdict = more probable class); sweep reported for transparency",
                     "category_search": cat_search,
                     "fusion_coefficients": dict(zip(final.names, np.round(final.clf.coef_[0], 4).tolist()))}
     (REPORTS / "training_report.json").write_text(json.dumps(train_report, indent=2), encoding="utf-8")
-    print(f"done in {time.perf_counter() - t_start:.0f}s -> {ART / 'scamprint_bundle.joblib'}")
+    print(f"done in {time.perf_counter() - t_start:.0f}s -> {ART / 'tekme_bundle.joblib'}")
 
 
 if __name__ == "__main__":

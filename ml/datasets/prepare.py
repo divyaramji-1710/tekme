@@ -1,4 +1,4 @@
-"""Build the unified, leakage-safe SCAMPRINT dataset.
+"""Build the unified, leakage-safe TEKMĒ dataset.
 
 Pipeline
 --------

@@ -5,11 +5,11 @@ import os
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-ARTIFACTS = Path(os.environ.get("SCAMPRINT_ARTIFACTS", ROOT / "ml" / "artifacts"))
+ARTIFACTS = Path(os.environ.get("TEKME_ARTIFACTS", ROOT / "ml" / "artifacts"))
 REPORTS = ROOT / "reports"
 BACKEND_DATA = ROOT / "backend" / "data"
 
-MODEL_BUNDLE = ARTIFACTS / "scamprint_bundle.joblib"
+MODEL_BUNDLE = ARTIFACTS / "tekme_bundle.joblib"
 METRICS_FILE = REPORTS / "metrics.json"
 
 # API limits
@@ -17,8 +17,8 @@ MAX_MESSAGE_CHARS = 2000
 MAX_MUTATIONS = 40
 
 # Server binds to loopback only. Override deliberately via env if ever needed.
-HOST = os.environ.get("SCAMPRINT_HOST", "127.0.0.1")
-PORT = int(os.environ.get("SCAMPRINT_PORT", "8000"))
+HOST = os.environ.get("TEKME_HOST", "127.0.0.1")
+PORT = int(os.environ.get("TEKME_PORT", "8000"))
 
 # Only the local dev server / preview server may call the API.
 CORS_ORIGINS = [
@@ -29,7 +29,7 @@ CORS_ORIGINS = [
 ]
 
 # Raw message contents are never logged unless this is explicitly enabled.
-LOG_MESSAGES = os.environ.get("SCAMPRINT_LOG_MESSAGES", "0") == "1"
+LOG_MESSAGES = os.environ.get("TEKME_LOG_MESSAGES", "0") == "1"
 
 CATEGORIES = ["KYC_BANK", "LOTTERY_PRIZE", "LOAN_CREDIT", "JOB_INVESTMENT", "OTHER"]
 CATEGORY_LABELS = {

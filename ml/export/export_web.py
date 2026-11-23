@@ -1,6 +1,6 @@
 """Export the trained bundle + rule engines for the in-browser (on-device) engine.
 
-Outputs (all generated from ``ml/artifacts/scamprint_bundle.joblib`` and the Python rule modules):
+Outputs (all generated from ``ml/artifacts/tekme_bundle.joblib`` and the Python rule modules):
 
 * ``frontend/public/model/model.bin``  - string table + float32 idf / coefficient arrays
 * ``frontend/public/model/model.json`` - manifest: array offsets, intercepts, fusion / calibration, metadata

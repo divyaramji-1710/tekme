@@ -1,4 +1,4 @@
-"""Download the public datasets used by SCAMPRINT (development-time only).
+"""Download the public datasets used by TEKMĒ (development-time only).
 
 Every file is pinned to a specific upstream revision and verified with SHA-256,
 so a rerun produces byte-identical inputs. The finished application never runs

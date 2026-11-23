@@ -12,5 +12,5 @@
 | `npm run check:offline` fails | A remote URL appeared in the build (e.g. in data or copy) | Remove it, or use a reserved `.example` domain for demo text |
 | Garbled non-ASCII in console | Windows code page | `$env:PYTHONIOENCODING="utf-8"` |
 | Theme flashes on load | `theme-init.js` blocked or missing | Ensure `/theme-init.js` is served; the CSP allows `'self'` scripts only |
-| Port 8000 in use | Another server running | Stop it, or set `SCAMPRINT_PORT` before `run.ps1` |
+| Port 8000 in use | Another server running | Stop it, or set `TEKME_PORT` before `run.ps1` |
 | Parity test fails after a rule change | Browser rules not re-exported | `python -m ml.export.parity; python -m ml.export.export_web; npx vitest run tests/parity.test.ts` |

@@ -1,6 +1,6 @@
 """Reproducible evaluation of the saved bundle on untouched data.
 
-Uses ``backend.services.inference.ScamPrint`` - the exact code path the API
+Uses ``backend.services.inference.TekmeModel`` - the exact code path the API
 serves - so reported numbers describe the shipped application.
 
 Outputs: reports/metrics.json (read by the UI), reports/evaluation_report.md,
@@ -117,7 +117,7 @@ def plot_reliability(rel: list[dict], path: Path):
     ax.plot([0, 1], [0, 1], color=INK2, linewidth=1, linestyle="--", label="Perfect calibration")
     xs = [r["mean_predicted"] for r in rel if r["count"]]
     ys = [r["observed_scam_rate"] for r in rel if r["count"]]
-    ax.plot(xs, ys, color=BLUE, linewidth=2, marker="o", markersize=6, label="SCAMPRINT")
+    ax.plot(xs, ys, color=BLUE, linewidth=2, marker="o", markersize=6, label="TEKMĒ")
     ax.set_xlabel("Predicted scam probability", color=INK2)
     ax.set_ylabel("Observed scam rate", color=INK2)
     ax.legend(frameon=False, fontsize=9)
@@ -150,9 +150,9 @@ def main() -> None:
     proc = psutil.Process()
     gc.collect()
     rss0 = proc.memory_info().rss
-    from backend.services.inference import ScamPrint
+    from backend.services.inference import TekmeModel
     t0 = time.perf_counter()
-    model = ScamPrint.load(MODEL_BUNDLE)
+    model = TekmeModel.load(MODEL_BUNDLE)
     load_s = time.perf_counter() - t0
     rss1 = proc.memory_info().rss
     t = model.threshold

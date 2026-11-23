@@ -46,8 +46,8 @@ def test_model_loads_with_dns_disabled(monkeypatch):
     monkeypatch.setattr(socket, "gethostbyname", no_dns)
     if not config.MODEL_BUNDLE.exists():
         pytest.skip("no bundle")
-    from backend.services.inference import ScamPrint
-    m = ScamPrint.load(config.MODEL_BUNDLE)
+    from backend.services.inference import TekmeModel
+    m = TekmeModel.load(config.MODEL_BUNDLE)
     assert m.predict("Your parcel is out for delivery")["verdict"] in ("SAFE", "SCAM")
 
 

@@ -66,7 +66,7 @@ Full guide: [docs/SETUP_WINDOWS.md](docs/SETUP_WINDOWS.md) · problems: [docs/TR
 ```
 Python (training, evaluation, reference)                Browser (runtime, on-device)
  data → preprocess → rules → TF-IDF LR → fusion  ──export──►  model.bin + rules.json → same pipeline in TypeScript
-          ↑ one bundle: ml/artifacts/scamprint_bundle.joblib         ↓
+          ↑ one bundle: ml/artifacts/tekme_bundle.joblib         ↓
           parity corpus (5,072 msgs) ───────── compared field-by-field ──┘
                                                          analysis layer: forensics · guidance · conversation ·
                                                          counterfactuals · batch · library · redaction · PWA

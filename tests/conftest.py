@@ -13,8 +13,8 @@ from backend.core.config import MODEL_BUNDLE  # noqa: E402
 def model():
     if not MODEL_BUNDLE.exists():
         pytest.skip("model bundle not trained yet")
-    from backend.services.inference import ScamPrint
-    return ScamPrint.load(MODEL_BUNDLE)
+    from backend.services.inference import TekmeModel
+    return TekmeModel.load(MODEL_BUNDLE)
 
 
 @pytest.fixture(scope="session")

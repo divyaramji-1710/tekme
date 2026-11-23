@@ -12,7 +12,7 @@ from backend.api.schemas import (EvaluateMutationsRequest, EvaluateMutationsResp
 from backend.core import config, privacy
 from backend.services import mutations
 
-log = logging.getLogger("scamprint")
+log = logging.getLogger("tekme")
 router = APIRouter()
 
 

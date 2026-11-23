@@ -2,7 +2,7 @@
 
 * ``install_network_guard`` patches ``socket.connect`` so this process cannot
   open an outbound connection to any non-loopback address (enabled by default;
-  set SCAMPRINT_NETWORK_GUARD=0 to disable). Inbound connections to the local
+  set TEKME_NETWORK_GUARD=0 to disable). Inbound connections to the local
   API are unaffected because servers *accept*, they do not *connect*.
 * ``status`` reports local model files, the guard state, any blocked attempts
   and the live list of this process's non-loopback sockets (via psutil).
@@ -54,7 +54,7 @@ def _guarded_connect(self, address):
         with _lock:
             _state["blocked_attempts"] += 1
             _state["last_blocked"] = str(address[0]) if isinstance(address, tuple) else "?"
-        raise OutboundBlocked(f"SCAMPRINT network guard blocked outbound connection to {address!r}")
+        raise OutboundBlocked(f"TEKME network guard blocked outbound connection to {address!r}")
     return _original_connect(self, address)
 
 
@@ -68,7 +68,7 @@ def _guarded_connect_ex(self, address):
 
 
 def install_network_guard() -> bool:
-    if os.environ.get("SCAMPRINT_NETWORK_GUARD", "1") == "0":
+    if os.environ.get("TEKME_NETWORK_GUARD", "1") == "0":
         return False
     with _lock:
         if not _state["installed"]:

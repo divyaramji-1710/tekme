@@ -1,6 +1,6 @@
 """Inference service: one code path for training features, evaluation and the API.
 
-All computation is local. ``ScamPrint.load()`` reads a single joblib bundle
+All computation is local. ``TekmeModel.load()`` reads a single joblib bundle
 from ``ml/artifacts`` once; predictions never touch the network.
 """
 from __future__ import annotations
@@ -43,7 +43,7 @@ def run_engines(text: str) -> EngineOutput:
     return EngineOutput(pre, hits, sigs, url_info, brep, feats)
 
 
-class ScamPrint:
+class TekmeModel:
     """Loaded model bundle + prediction logic."""
 
     def __init__(self, bundle: dict, path: Path | None = None):
@@ -58,7 +58,7 @@ class ScamPrint:
         self.meta = bundle.get("metadata", {})
 
     @classmethod
-    def load(cls, path: Path = MODEL_BUNDLE) -> "ScamPrint":
+    def load(cls, path: Path = MODEL_BUNDLE) -> "TekmeModel":
         t0 = time.perf_counter()
         obj = cls(joblib.load(path), path)
         obj.load_seconds = time.perf_counter() - t0

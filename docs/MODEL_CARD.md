@@ -1,4 +1,4 @@
-# Model card — TEKMĒ (model scamprint-1.0)
+# Model card — TEKMĒ (model tekme-1.0)
 
 > TEKMĒ 2.0 runs this same model in the browser (float32 weights; parity on 5,072 messages: identical verdicts,
 > categories and explanations, max probability difference 3.6e-6). A separate, weaker **compact model** exists for
@@ -7,8 +7,8 @@
 | | |
 |---|---|
 | Model | Hybrid: word+char TF-IDF logistic regression (semantic) + transactional specialist + rule engines → calibrated logistic-regression fusion; multinomial LR category model |
-| Version / date | `scamprint-1.0`, trained 2026-11-23 (`reports/training_report.json`) |
-| Artifact | `ml/artifacts/scamprint_bundle.joblib` (7.9 MB) + `vocab.txt`; scikit-learn 1.9.1, Python 3.12 |
+| Version / date | `tekme-1.0`, trained 2026-11-23 (`reports/training_report.json`) |
+| Artifact | `ml/artifacts/tekme_bundle.joblib` (7.9 MB) + `vocab.txt`; scikit-learn 1.9.1, Python 3.12 |
 | Developer | Divya Ramji (1MS24CI044), Tinyverse PS-01 |
 | Licence of training data | CC BY 4.0 (see `docs/DATASETS.md`) |
 

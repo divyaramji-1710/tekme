@@ -5,7 +5,7 @@ TypeScript runs the same model in the browser for every user-facing feature.
 
 ```
                          ┌──────────────────── Python (training & reference) ────────────────────┐
- public datasets ──► ml/datasets/prepare.py ─► augment.py ─► ml/training/train.py ─► scamprint_bundle.joblib
+ public datasets ──► ml/datasets/prepare.py ─► augment.py ─► ml/training/train.py ─► tekme_bundle.joblib
                          │  backend/preprocessing  backend/engines (tactics, trust, benign, semantic, fusion,     │
                          │  categorizer)  backend/explainability  →  ml/evaluation/evaluate.py → reports/*      │
                          └───────────────────────────────────────────────────────────────────────────────────────┘
