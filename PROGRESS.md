@@ -1,8 +1,18 @@
 # Progress
 
-**Current phase:** complete prototype (Checkpoints 0–19). Checkpoint 14 is PARTIAL only because the physical
-Wi-Fi-off demonstration needs to be done by the user.
+**Current phase:** TEKMĒ phase 2 — Checkpoint T1 (repository audit) PASS; waiting on user decisions before T2.
 **Last updated:** 2026-11-23
+
+## TEKMĒ phase 2
+* T1 audit done: see `FEATURE_MATRIX.md` (core detection Done; features 5, 6, 7, 10, 11, 12, 14 Partial; the
+  other 13 Missing; Athena hero and iOS build Blocked). Mockups stored in `docs/design/` as design references only.
+* Baseline: 110/111 tests passed on battery power; the latency test failed once and passed on rerun (K14).
+  `npm run build` and the offline-asset scan pass.
+* **Next action:** get answers on (1) the Athena artwork asset, (2) in-browser inference scope for the PWA;
+  then T2 architecture (shared analysis contract, uncertainty band, new endpoints) and T3 branding.
+
+## Phase 1 — SCAMPRINT prototype (complete)
+Checkpoints 0–19 done; Checkpoint 14 PARTIAL only because the physical Wi-Fi-off demonstration needs the user.
 
 ## Completed and verified
 * Data pipeline: download (pinned + SHA-256) → prepare (25,421 rows, group-aware split, leakage audit) → augment

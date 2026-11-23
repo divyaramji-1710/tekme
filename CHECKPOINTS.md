@@ -1,5 +1,32 @@
 # Checkpoints
 
+## Phase 2 — TEKMĒ (rebrand + advanced features)
+
+| # | Phase | Status | Verified by |
+|---|---|---|---|
+| T1 | Repository audit | PASS | 111 tests collected; full run 110 passed, 1 failed (latency, power-state; rerun passed, K14); `npm run build` OK; offline scan OK; audit in `FEATURE_MATRIX.md` |
+| T2 | Architecture | pending | |
+| T3 | TEKMĒ branding | pending | |
+| T4 | Dark and light themes | pending | |
+| T5 | Website redesign + Athena hero | BLOCKED (artwork) | needs a separate Athena asset; layout work can proceed |
+| T6 | Core detection engine | pending | |
+| T7 | Scam DNA and evidence | pending | |
+| T8 | URL, UPI, impersonation | pending | |
+| T9 | Conversation intelligence | pending | |
+| T10 | Adversarial features | pending | |
+| T11 | Model intelligence | pending | |
+| T12 | Batch and threat library | pending | |
+| T13 | Privacy and accessibility | pending | |
+| T14 | PWA | pending | |
+| T15 | Native iOS source | pending | |
+| T16 | iOS feasibility validation | pending | cannot build on Windows |
+| T17 | Integration testing | pending | |
+| T18 | Final polish | pending | |
+| T19 | Documentation | pending | |
+| T20 | Final demonstration | pending | |
+
+## Phase 1 — SCAMPRINT prototype (complete)
+
 | # | Phase | Status | Verified by |
 |---|---|---|---|
 | 0 | Environment audit | PASS | Win 11, Python 3.12.10, Node 24.15.0 / npm 11.12.1, Git 2.55, i7-1355U (12 threads), 31.7 GB RAM, 286 GB free, no GPU; `.venv` created; deps installed |
@@ -19,6 +46,6 @@
 | 14 | Offline privacy verification | PARTIAL | automated guard/DNS/log/build tests + OS TCP table PASS; physical Wi-Fi-off run not performed (needs user) |
 | 15 | Comprehensive evaluation | PASS | `reports/metrics.json`, evaluation report, figures, ablation, error analysis |
 | 16 | Automated testing | PASS | 111 passed, 0 failed, 0 skipped |
-| 17 | Performance | PASS | p50 15.9 ms, p95 29.9 ms, 7.9 MB, +124 MB RAM, 88 KB gz UI |
+| 17 | Performance | PASS | p50 15.9 ms, p95 29.9 ms, 7.9 MB, +124 MB RAM, 88 KB gz UI (see K14 for power-state variance) |
 | 18 | Documentation | PASS | README, TECHNICAL_REPORT, docs/* |
 | 19 | Final E2E verification | PASS | see docs/TESTING.md "End-to-end verification" |
