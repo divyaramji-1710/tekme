@@ -68,11 +68,9 @@ const TAG_RATIO = 1361 / 127;
 const header = (dark) => [
   { image: { x: 0.6, y: 0.4, w: 0.3, h: 0.3, path: A(dark ? "mark_dark.png" : "mark_light.png") } },
   { image: { x: 1.0, y: 0.455, w: 0.19 * WM_RATIO, h: 0.19, path: A(dark ? "wm_tekme_dark.png" : "wm_tekme_light.png") } },
-  { text: { text: "TINYVERSE  ·  PROBLEM STATEMENT 01", options: { x: 7.73, y: 0.4, w: 5.0, h: 0.3, align: "right", valign: "middle",
-    fontSize: 9, bold: true, charSpacing: 2, color: dark ? K.dBronze : K.ink3, margin: 0 } } },
-  { text: { text: "TEKMĒ  ·  Evidence over instinct.  ·  Divya Ramji (1MS24CI044)", options: { x: 0.6, y: 7.0, w: 7, h: 0.25, fontSize: 9,
+  { text: { text: "TEKMĒ  ·  Tinyverse PS-01  ·  Divya Ramji, 1MS24CI044  ·  CSE (AI & ML)", options: { x: 0.6, y: 7.0, w: 8, h: 0.25, fontSize: 9,
     color: dark ? K.dInk2 : K.ink3, margin: 0, valign: "middle" } } },
-  { placeholder: { options: { name: "eyebrow", type: "body", x: 0.6, y: 0.98, w: 9, h: 0.28, fontSize: 10.5, bold: true, charSpacing: 3,
+  { placeholder: { options: { name: "eyebrow", type: "body", x: 0.6, y: 0.98, w: 9, h: 0.28, fontSize: 10.5, bold: true, charSpacing: 2.5,
     color: dark ? K.dTag : K.bronze, margin: 0, valign: "middle" }, text: "" } },
   { placeholder: { options: { name: "title", type: "title", x: 0.6, y: 1.26, w: 12.13, h: 0.62, fontSize: 30, color: dark ? K.dInk : K.espresso,
     margin: 0, valign: "middle", align: "left" }, text: "" } },
@@ -107,6 +105,17 @@ function chip(s, x, y, w, text, o = {}) {
   t(s, text, { x: x + 0.08, y, w: w - 0.16, h, fontSize: o.fs ?? 11, color: o.color ?? K.ink2, valign: "middle", align: "center", bold: o.bold });
 }
 const cell = (text, o = {}) => ({ text, options: o });
+// Section tracker in the header: shows where the talk is (current section bold and coloured).
+const SECTIONS = ["Problem", "Solution", "Tech stack", "Architecture", "Impact", "Results"];
+function tracker(s, active, dark) {
+  const runs = [];
+  SECTIONS.forEach((name, i) => {
+    if (i) runs.push({ text: "   ·   ", options: { color: dark ? K.dLine : K.line2 } });
+    runs.push({ text: `${String(i + 1).padStart(2, "0")} ${name}`, options: i === active
+      ? { bold: true, color: dark ? K.dInk : K.bronze } : { color: dark ? K.dBronze : K.ink3 } });
+  });
+  t(s, runs, { x: 5.2, y: 0.4, w: 7.53, h: 0.3, fontSize: 9.5, align: "right", valign: "middle" });
+}
 
 // =====================================================================================================
 // Title slide (dark, no artwork)
@@ -158,7 +167,8 @@ At-a-glance numbers come from reports/metrics.json.`);
 pres.addSection({ title: "Problem & Solution" });
 {
   const s = pres.addSlide({ masterName: "TEKME_LIGHT", sectionTitle: "Problem & Solution" });
-  s.addText("SLIDE 1  ·  PROBLEM STATEMENT & EXISTING SOLUTIONS", { placeholder: "eyebrow" });
+  s.addText("01  ·  PROBLEM STATEMENT & EXISTING SOLUTIONS", { placeholder: "eyebrow" });
+  tracker(s, 0, false);
   s.addText("Scam messages weaponise trust, urgency and language", { placeholder: "title" });
 
   // What the problem is.
@@ -221,7 +231,8 @@ Existing tools filter senders, look numbers up in the cloud, or require uploadin
 // =====================================================================================================
 {
   const s = pres.addSlide({ masterName: "TEKME_LIGHT", sectionTitle: "Problem & Solution" });
-  s.addText("SLIDE 2  ·  PROPOSED SOLUTION", { placeholder: "eyebrow" });
+  s.addText("02  ·  PROPOSED SOLUTION", { placeholder: "eyebrow" });
+  tracker(s, 1, false);
   s.addText("TEKMĒ reads the message and shows its evidence", { placeholder: "title" });
 
   // Real screenshot of the running website in a browser frame.
@@ -287,7 +298,8 @@ Better than existing tools: on-device (privacy), explains every verdict, honest 
 pres.addSection({ title: "How it is built" });
 {
   const s = pres.addSlide({ masterName: "TEKME_LIGHT", sectionTitle: "How it is built" });
-  s.addText("SLIDE 3  ·  TECH STACK", { placeholder: "eyebrow" });
+  s.addText("03  ·  TECH STACK", { placeholder: "eyebrow" });
+  tracker(s, 2, false);
   s.addText("Small, local and explainable by design", { placeholder: "title" });
 
   const H = (x) => cell(x, { bold: true, color: K.surface, fill: { color: K.espresso }, fontSize: 10.5 });
@@ -331,7 +343,8 @@ Latency measured on the developer laptop (reports/web_performance.json); varies 
 // =====================================================================================================
 {
   const s = pres.addSlide({ masterName: "TEKME_LIGHT", sectionTitle: "How it is built" });
-  s.addText("SLIDE 4  ·  ARCHITECTURE DIAGRAM", { placeholder: "eyebrow" });
+  s.addText("04  ·  ARCHITECTURE DIAGRAM", { placeholder: "eyebrow" });
+  tracker(s, 3, false);
   s.addText("From message to verdict, entirely inside the browser", { placeholder: "title" });
 
   card(s, 0.6, 2.05, 12.13, 2.72, { fill: "FBF6F0", line: K.line2, lineW: 1, dash: "dash", shadow: false, r: 0.1, name: "Device boundary" });
@@ -411,7 +424,8 @@ Security: CSP, localhost binding, no logging, model integrity check. Feedback lo
 pres.addSection({ title: "Impact & Results" });
 {
   const s = pres.addSlide({ masterName: "TEKME_LIGHT", sectionTitle: "Impact & Results" });
-  s.addText("SLIDE 5  ·  IMPACT", { placeholder: "eyebrow" });
+  s.addText("05  ·  IMPACT", { placeholder: "eyebrow" });
+  tracker(s, 4, false);
   s.addText("Safer phones without giving up privacy", { placeholder: "title" });
 
   card(s, 0.6, 2.05, 12.13, 0.5, { fill: K.surface2, line: K.line, shadow: false, r: 0.08, name: "Who benefits" });
@@ -463,7 +477,8 @@ We do not claim money saved or users protected: TEKMĒ has not yet been deployed
 // =====================================================================================================
 {
   const s = pres.addSlide({ masterName: "TEKME_DARK", sectionTitle: "Impact & Results" });
-  s.addText("SLIDE 6  ·  RESULTS, FUTURE SCOPE & REFERENCES", { placeholder: "eyebrow" });
+  s.addText("06  ·  RESULTS, FUTURE SCOPE & REFERENCES", { placeholder: "eyebrow" });
+  tracker(s, 5, true);
   s.addText("Measured on unseen data, and what comes next", { placeholder: "title" });
 
   const tiles = [[F.acc, "Accuracy", `held-out test, n ${F.n}`], [F.f1, "F1 score", `precision ${F.prec} · recall ${F.rec}`],
