@@ -14,6 +14,7 @@ import { familiarity, type Intel } from "../src/analysis/intel";
 import { generate, mutate } from "../src/analysis/mutations";
 import { pyRound } from "../src/engine/py";
 import { exportJson } from "../src/pages/Analyzer";
+import { checkIdentifier, detectIdentifier } from "../src/analysis/identifier";
 
 const engine = loadEngineFromDisk();
 const intel = JSON.parse(readFileSync(resolve(__dirname, "../public/model/intel.json"), "utf-8")) as Intel;
@@ -158,5 +159,43 @@ describe("mutation lab", () => {
     const t = "Update your KYC immediately at http://kyc.example/login or your account will be blocked";
     expect(mutate(t, "char_substitution", 3)).toBe(mutate(t, "char_substitution", 3));
     for (const v of generate(t)) expect(v.text.toLowerCase()).not.toMatch(/https?:\/\/(?!kyc)[a-z]/);
+  });
+});
+
+describe("standalone link / UPI ID check (D33)", () => {
+  const V = (t: string, mode: "message" | "url" | "upi" = "message") => {
+    const id = detectIdentifier(t, mode);
+    return id ? checkIdentifier(id).verdict : null;
+  };
+  it("routes a single link or UPI ID away from the message model, and messages to it", () => {
+    expect(detectIdentifier("https://www.onlinesbi.sbi")?.kind).toBe("url");
+    expect(detectIdentifier("foodapp@icici")?.kind).toBe("upi");
+    expect(detectIdentifier("me@gmail.com")).toBeNull(); // e-mail, not UPI
+    expect(detectIdentifier("hello")).toBeNull();
+    expect(detectIdentifier("Pay Rs 10 to refund.helpdesk@ybl now", "upi")).toBeNull(); // a sentence stays a message
+    expect(detectIdentifier("someone@fakebank")).toBeNull();
+    expect(detectIdentifier("someone@fakebank", "upi")?.kind).toBe("upi");
+  });
+  it("does not call genuine official links scams", () => {
+    expect(V("https://www.onlinesbi.sbi")).toBe("OFFICIAL");
+    expect(V("amazon.in/your-orders")).toBe("OFFICIAL");
+    expect(V("https://example.com")).toBe("UNVERIFIED");
+    expect(V("bit.ly/3xYz")).toBe("UNVERIFIED");
+  });
+  it("flags look-alike, credential-trick and shortened lure links", () => {
+    expect(V("http://sbi-kyc-verify.example/login")).toBe("SUSPICIOUS");
+    expect(V("http://amaz0n-refund.example/claim")).toBe("SUSPICIOUS");
+    expect(V("http://www.sbi.co.in@login-verify.example/secure")).toBe("SUSPICIOUS");
+    expect(V("bit.ly/kyc-upd8")).toBe("SUSPICIOUS");
+  });
+  it("flags lure UPI IDs and leaves ordinary ones unverified, never 'safe'", () => {
+    expect(V("sbi.kyc.refund@ybl")).toBe("SUSPICIOUS");
+    expect(V("sbikycupdate@ybl")).toBe("SUSPICIOUS");
+    expect(V("refund.helpdesk@ybl")).toBe("SUSPICIOUS");
+    expect(V("someone@fakebank", "upi")).toBe("SUSPICIOUS");
+    for (const ok of ["foodapp@icici", "9876543210@paytm", "giftshop@okaxis", "olaf.public@ybl"]) expect(V(ok)).toBe("UNVERIFIED");
+  });
+  it("messages containing links still go to the model", () => {
+    expect(detectIdentifier(A("Dear SBI customer, your KYC has expired. Update: http://sbi-kyc-verify.example/login").input.text)).toBeNull();
   });
 });

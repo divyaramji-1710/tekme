@@ -10,6 +10,8 @@ import { redact } from "../analysis/redact";
 import { download } from "../analysis/batch";
 import { clearHistory, loadHistory, type HistoryItem } from "../analysis/store";
 import type { Analysis } from "../analysis/analyze";
+import type { InputMode } from "../analysis/identifier";
+import { IdentifierResult } from "../components/IdentifierResult";
 
 export function exportReport(a: Analysis, opt: Parameters<typeof redact>[1] | null): string {
   const r = (t: string) => (opt ? redact(t, opt) : t);
@@ -74,16 +76,17 @@ function HistoryPanel({ onPick }: { onPick: (t: string) => void }) {
 
 export default function AnalyzerPage({ params }: { params: URLSearchParams }) {
   const { status, error: loadError, retry, settings, engine } = useApp();
-  const { analysis: a, error, busy, run, ready } = useAnalysis();
+  const { analysis: a, check, error, busy, run, ready } = useAnalysis();
   const [text, setText] = useState(params.get("text") ?? "");
   const [sender, setSender] = useState("");
-  const [mode, setMode] = useState<"message" | "url" | "upi">("message");
+  const initialMode = params.get("mode");
+  const [mode, setMode] = useState<InputMode>(initialMode === "url" || initialMode === "upi" ? initialMode : "message");
   const [redactOn, setRedactOn] = useState(true);
   const guidanceRef = useRef<HTMLDivElement>(null);
   const started = useRef(false);
   useEffect(() => {
-    if (ready && !started.current && params.get("text")) { started.current = true; run(params.get("text")!); }
-  }, [ready, params, run]);
+    if (ready && !started.current && params.get("text")) { started.current = true; run(params.get("text")!, undefined, mode); }
+  }, [ready, params, run, mode]);
   useEffect(() => { if (a && params.get("focus") === "guidance") guidanceRef.current?.scrollIntoView({ behavior: "smooth" }); }, [a, params]);
 
   return (
@@ -94,7 +97,7 @@ export default function AnalyzerPage({ params }: { params: URLSearchParams }) {
       <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_360px]">
         <div className="min-w-0 space-y-5">
           <Panel as="div">
-            <MessageInput text={text} setText={setText} mode={mode} setMode={setMode} onAnalyze={() => run(text, sender)} busy={busy} disabled={!ready} id="analyzer-message" />
+            <MessageInput text={text} setText={setText} mode={mode} setMode={setMode} onAnalyze={() => run(text, sender, mode)} busy={busy} disabled={!ready} id="analyzer-message" />
             <details className="mt-4 text-sm">
               <summary className="cursor-pointer text-ink-2">Optional: sender ID (e.g. AD-BANKXX or a phone number)</summary>
               <label className="mt-2 block text-xs text-ink-3" htmlFor="sender">Used only for sender checks; it does not change the model's verdict.</label>
@@ -106,8 +109,9 @@ export default function AnalyzerPage({ params }: { params: URLSearchParams }) {
 
           {status === "loading" && <MarkLoader label="Loading the on-device model…" />}
           {status === "error" && <ErrorBox message={loadError ?? "Model failed to load"} onRetry={retry} />}
-          {!a && status === "ready" && !busy && <Panel as="div"><Empty icon={<ScanSearch className="h-6 w-6" />} title="No message analysed yet">Paste a message above or pick an example.</Empty></Panel>}
-          {busy && !a && <MarkLoader label="Analysing…" />}
+          {!a && !check && status === "ready" && !busy && <Panel as="div"><Empty icon={<ScanSearch className="h-6 w-6" />} title="No message analysed yet">Paste a message above or pick an example.</Empty></Panel>}
+          {busy && !a && !check && <MarkLoader label="Analysing…" />}
+          {check && <Panel as="div" className="fade-in"><IdentifierResult c={check} /></Panel>}
 
           {a && (
             <div className="fade-in space-y-5">

@@ -7,11 +7,13 @@ import examplesJson from "../engine/generated/examples.json";
 import { Button, ErrorBox, Panel } from "./ui";
 import { EvidenceDossier, VerdictBanner } from "./result";
 import { MarkLoader } from "../brand/EvidenceMark";
+import { checkIdentifier, detectIdentifier, type IdentifierCheck, type InputMode } from "../analysis/identifier";
+import { IdentifierResult } from "./IdentifierResult";
 
 export const MAX_CHARS = 2000;
 export interface Example { id: string; group: string; title: string; text: string }
 export const EXAMPLES = (examplesJson as { examples: Example[] }).examples;
-type Mode = "message" | "url" | "upi";
+type Mode = InputMode;
 const PLACEHOLDER: Record<Mode, string> = {
   message: "Paste an SMS or WhatsApp message…",
   url: "Paste a link exactly as it appears (it is never opened)…",
@@ -21,9 +23,10 @@ const PLACEHOLDER: Record<Mode, string> = {
 export function useAnalysis() {
   const { engine, intel, settings } = useApp();
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
+  const [check, setCheck] = useState<IdentifierCheck | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
-  const run = useCallback((text: string, sender?: string) => {
+  const run = useCallback((text: string, sender?: string, mode: Mode = "message") => {
     if (!engine) return;
     const t = text.trim();
     if (!t) { setError("Paste a message first."); return; }
@@ -32,7 +35,11 @@ export function useAnalysis() {
     // let React paint the busy state before the synchronous analysis
     setTimeout(() => {
       try {
+        // A bare link or UPI ID is outside the message model's training data: use the rule-based check (D33).
+        const id = detectIdentifier(text, mode);
+        if (id) { setCheck(checkIdentifier(id)); setAnalysis(null); return; }
         const a = analyse(engine, intel, text, { sender, lang: settings.lang });
+        setCheck(null);
         setAnalysis(a);
         if (settings.history) addHistory({ text, verdict: a.core.verdict, display: a.uncertainty.display_verdict, category: a.core.category, confidence: a.core.confidence }, settings.retentionDays);
       } catch (e) {
@@ -40,7 +47,7 @@ export function useAnalysis() {
       } finally { setBusy(false); }
     }, 16);
   }, [engine, intel, settings.lang, settings.history, settings.retentionDays]);
-  return { analysis, setAnalysis, error, busy, run, ready: !!engine };
+  return { analysis, setAnalysis, check, error, busy, run, ready: !!engine };
 }
 
 export function MessageInput({ text, setText, mode, setMode, onAnalyze, busy, disabled, showModes = true, id = "message" }: {
@@ -92,32 +99,39 @@ export function ExampleChips({ onPick }: { onPick: (t: string) => void }) {
 /** Home-page pair: analyzer card + compact result card, matching the approved layout. */
 export function AnalyzerPair() {
   const { status, error: loadError, retry } = useApp();
-  const { analysis, error, busy, run, ready } = useAnalysis();
+  const { analysis, check, error, busy, run, ready } = useAnalysis();
   const [text, setText] = useState(EXAMPLES.find((e) => e.id === "kyc_en")?.text ?? "");
   const [mode, setMode] = useState<Mode>("message");
   const ran = useRef(false);
   const [now, setNow] = useState(Date.now());
   useEffect(() => { if (ready && !ran.current && text) { ran.current = true; run(text); } }, [ready, run, text]);
   useEffect(() => { const i = setInterval(() => setNow(Date.now()), 30000); return () => clearInterval(i); }, []);
-  const ago = analysis ? Math.max(0, Math.round((now - Date.parse(analysis.analysed_at)) / 60000)) : 0;
+  const at = analysis?.analysed_at ?? check?.analysed_at;
+  const ago = at ? Math.max(0, Math.round((now - Date.parse(at)) / 60000)) : 0;
   return (
     <>
       <Panel className="min-w-0 flex-1" as="div">
         <h2 className="font-display text-[2.35rem] font-semibold leading-tight text-ink">Message Analyzer</h2>
         <p className="mb-4 mt-1 text-[0.95rem] text-ink-2">Paste any SMS or WhatsApp message to detect and analyse potential fraud — on this device.</p>
-        <MessageInput text={text} setText={setText} mode={mode} setMode={setMode} onAnalyze={() => run(text)} busy={busy} disabled={!ready} id="home-message" />
+        <MessageInput text={text} setText={setText} mode={mode} setMode={setMode} onAnalyze={() => run(text, undefined, mode)} busy={busy} disabled={!ready} id="home-message" />
         {error && <div className="mt-3"><ErrorBox message={error} /></div>}
         <ExampleChips onPick={(t) => { setText(t); run(t); }} />
       </Panel>
       <Panel className="w-full min-w-0 xl:w-[490px] xl:shrink-0" as="div">
         <div className="mb-3 flex items-center justify-between gap-3">
           <h2 className="font-display text-[1.7rem] font-semibold text-ink">Analysis Result</h2>
-          {analysis && <span className="flex items-center gap-1.5 text-sm text-ink-2"><Clock className="h-4 w-4" aria-hidden />Analysed {ago === 0 ? "just now" : `${ago} min ago`}</span>}
+          {at && <span className="flex items-center gap-1.5 text-sm text-ink-2"><Clock className="h-4 w-4" aria-hidden />Analysed {ago === 0 ? "just now" : `${ago} min ago`}</span>}
         </div>
         {status === "loading" && <MarkLoader label="Loading the on-device model…" />}
         {status === "error" && <ErrorBox message={loadError ?? "The model failed to load."} onRetry={retry} />}
-        {status === "ready" && !analysis && !busy && <p className="py-8 text-center text-sm text-ink-3">Results appear here. Nothing is sent anywhere.</p>}
-        {busy && !analysis && <MarkLoader label="Analysing…" />}
+        {status === "ready" && !analysis && !check && !busy && <p className="py-8 text-center text-sm text-ink-3">Results appear here. Nothing is sent anywhere.</p>}
+        {busy && !analysis && !check && <MarkLoader label="Analysing…" />}
+        {check && (
+          <div className="fade-in space-y-3">
+            <IdentifierResult c={check} compact />
+            <Button variant="outline" onClick={() => go("analyze", { text: check.value, mode: check.kind })}>View Full Check <ArrowRight className="h-4 w-4" aria-hidden /></Button>
+          </div>
+        )}
         {analysis && (
           <div className="fade-in space-y-3">
             <VerdictBanner a={analysis} compact />
